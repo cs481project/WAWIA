@@ -1,0 +1,21 @@
+{% extends 'pollingSite/base.html' %}
+
+{% block content %}
+<div class="row">
+    <button type="submit"style="background-color: #990000">Add Class</button>       
+</div>
+<div class="row">
+    <div class="six columns"><font size="6"><b>Winter 2018</b></font></div>
+</div>
+{% for class in classroom %}
+<div class="row">
+    <div class="six columns">
+        <font size="3">
+        <a href="{% url 'pollingSite:classroom' class.id %}">
+            {{ class.className }}
+        </a>
+        </font>
+    </div>
+</div>
+{% endfor %}
+{% endblock content%}
