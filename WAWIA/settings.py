@@ -82,7 +82,7 @@ DATABASES = {
         'USER': '404GroupMemberNotFound',
         'PASSWORD': 'kckdjsag2018',
         'HOST': 'localhost':
-        'PORT': '3306',
+        'PORT': '80',
     }
 }
 
