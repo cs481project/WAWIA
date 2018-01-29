@@ -1,18 +1,26 @@
 ﻿{% extends 'pollingSite/base.html' %}
 {% block content %}
 <label style="text-align:center"><font size="6"><b>{{ poll.name }}</b></font></label>
-        </div>
-        <div class="row">
-            <button type="submit" style="background-color: #990000">Close Poll</button>
-        </div>
-        <div class="row">
-            <div id ="pollbox" class="six columns">
-                <li>
-                    {% for option in options %}
-                        <font size="4"><ul>{{ option }}. #</ul></font>
-                    {% endfor %}
-                </li>
+<div class="row">
+    <div class="two columns"><label><b>&nbsp;</b></label></div>
+    <div class="five columns"><label style="text-align:right; font-size:xx-large"><b>Total Submissions:</b></label></div>
+    <div class="two columns"><input type="text" readonly /></div>            <div class="four columns"><label><b>&nbsp;</b></label></div>
+</div>
+
+<div class="row">
+        <li>
+            {% for option in options %}
+            <div class="row">
+                <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ option }}.</b></label></div>
+                <div class="one column"><input type="text" readonly /></div>
             </div>
-            <div id="totalPoll" class="six columns"><font size="4"><ul>Total: #</ul></font></div>    
-        </div>
+            {% endfor %}
+        </li>           
+    <div class="row">
+    <div class="four columns"><label><b>&nbsp;</b></label></div>
+    <div class="four columns"><button type="submit" style="background-color: #990000">Close Poll</button></div>
+    <div class="four columns"><label><b>&nbsp;</b></label></div>
+
+</div>
+</div>
 {% endblock content %}
