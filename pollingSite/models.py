@@ -21,6 +21,7 @@ class Student(models.Model):
 class Poll(models.Model):
     name = models.CharField(max_length = 64)
     options = models.IntegerField()
+    correct = models.IntegerField(default=1)
     key = models.CharField(max_length = 6, unique=True, default='')
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null=True)
     startTime = models.DateTimeField(null=True)

@@ -10,7 +10,7 @@ def landing(request):
         return redirect('pollingSite:index')
 
 def index(request):
-    classroom = Classroom.objects.all()
+    classroom = Classroom.objects.filter(instructor=request.user)
     return render(request, 'pollingSite/index.html', locals())
 
 def login(request):
@@ -33,12 +33,13 @@ def attendance(request, classroom):
     return render(request, 'pollingSite/attendance.html', locals())
 
 def pollList(request, classroom):
+    polls = Poll.objects.filter(classroom=classroom)
     return render(request, 'pollingSite/pollList.html', locals())
 
 def createPoll(request, classroom):
     return render(request, 'pollingSite/createPoll.html', locals())
 
-def activePoll(request, poll, classroom):
+def activePoll(request, classroom, poll):
     poll = Poll.objects.get(id=poll)
     options = range(1, poll.options + 1)
     return render(request, 'pollingSite/activePoll.html', locals())

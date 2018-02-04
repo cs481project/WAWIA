@@ -5,7 +5,7 @@ from . import views
 
 
 app_name = 'pollingSite'
-urlpatterns = [
+urlpatterns = [#				URL\/
     path('', views.landing, name='landing'),
     path('index', views.index, name='index'),
     path('login', views.login, name='login'),
