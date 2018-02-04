@@ -2,11 +2,16 @@ from string import ascii_uppercase, digits
 from random import choices
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
+
+SEASONS = ((0, "Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
 
 class Classroom(models.Model):
     classNumber = models.CharField(max_length = 20, unique=True)
     className = models.CharField(max_length = 64, default=classNumber)
-    instructor = models.ForeignKey(User, on_delete=models.CASCADE)
+    #quarter = models.IntegerField(choices=SEASONS)
+    #year = models.IntegerField(choices=[(i,i) for i in range(2018, datetime.now().year + 1)])
+    instructor = models.ForeignKey(User, on_delete=models.CASCADE) #change on_delete
     def __str__(self):
         return self.className
 
