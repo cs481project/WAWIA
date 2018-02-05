@@ -18,5 +18,5 @@ urlpatterns = [
     path('<str:classroom>/attendance/', views.attendance, name='attendance'),
     path('<str:classroom>/polllist/', views.pollList, name='pollList'),
     path('<str:classroom>/createpoll/', views.createPoll, name='createPoll'),
-    path('<str:classroom>/<int:poll>/active', views.activePoll, name='activePoll'),
+    path('<str:classroom>/<int:poll>/active/', views.activePoll, name='activePoll'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

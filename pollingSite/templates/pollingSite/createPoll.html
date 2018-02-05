@@ -1,16 +1,10 @@
 ﻿{% extends 'pollingSite/base.html' %}
 {% block content %}
+<form method="post" style="border-color:InactiveBorder">
+    {% csrf_token %}
+        {{form.as_table}}
 <div class="row">
     <button type="submit" style="background-color: #990000">Add Poll</button>
 </div>
-<div class="row">
-    <div class="six columns"><font size="6"><b>Winter 2018</b></font></div>
-</div>
-<label><b>Number of choices: </b></label>
-<input type="text" placeholder="Enter a number" name="choices" required>
-
-<label><b>Correct Choice</b></label>
-<input type="text" placeholder="Enter a Number" name="correct" required>
-
-<button type="submit">Start Poll</button>
+</form>
 {% endblock content %}

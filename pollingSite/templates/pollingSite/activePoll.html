@@ -13,10 +13,10 @@
                 <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ option }}.</b></label></div>
                 <div class="one column"><input type="text" readonly /></div>
             </div>
-            {% endfor %}         
+            {% endfor %}
     <div class="row">
     <div class="four columns"><label><b>&nbsp;</b></label></div>
-    <div class="four columns"><button type="submit" style="background-color: #990000">Close Poll</button></div>
+    <div class="four columns"><button type="submit" style="background-color: #990000"><a  style="text-decoration:none; color:inherit" href="{% url 'pollingSite:pollList' poll.classroom.id %}"> Close Poll </a></button></div>
     <div class="four columns"><label><b>&nbsp;</b></label></div>
 
 </div>

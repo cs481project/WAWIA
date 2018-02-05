@@ -1,25 +1,24 @@
-﻿{% extends 'pollingSite/base.html' %}
+{% extends 'pollingSite/base.html' %}
 {% block content %}
-        <label><b>Class Name </b></label>
-        <input type="text" placeholder="Enter Class Name" name="ClassName" required>
-
-        <label><b>Academic Quarter</b></label>
-        <input type="text" placeholder="Enter Academic Quarter" name="Quarter" required>
-        <div class="row">&nbsp;</div>
-       <div class="row">
-           <div class="four columns"><label><b>&nbsp;</b></label></div>
-        <div class="four columns"><button type="submit">Generate Class Key</button></div>
-           <div class="four columns"><label><b>&nbsp;</b></label></div>
-           </div>
-           <div class="row">
-               <div class="four columns"><label><b>&nbsp;</b></label></div>
-               <div class="four columns"><output name="key"><input type="text" readonly /> </output></div>
-               <div class="four columns"><label><b>&nbsp;</b></label></div>
-           </div>
-        <div class="row">&nbsp;</div>
-        <div class="row">
-            <div class="three columns"><label><b>&nbsp;</b></label></div>
-            <div class="six columns"><button type="submit" style="background-color: #990000">Add Class</button></div>
-            <div class="three columns"><label><b>&nbsp;</b></label></div>
+        <form method="post" style="border-color:InactiveBorder">
+        {% csrf_token %}
+            {{form.as_table}}
+            <div class="row">
+                <div class="three columns"><label><b>&nbsp;</b></label></div>
+                <div class="six columns"><button type="button">Generate Class Key</button></div>
+                <div class="three columns"><label><b>&nbsp;</b></label></div>
             </div>
+            <div class="row">
+                <div class="four columns"><label><b>&nbsp;</b></label></div>
+                <div class="four columns"><output name="key"><input type="text" readonly /> </output></div>
+                <div class="four columns"><label><b>&nbsp;</b></label></div>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+                <div class="three columns"><label><b>&nbsp;</b></label></div>
+                <div class="six columns"><button type="submit" style="background-color: #990000">Add Class</button></div>
+                <div class="three columns"><label><b>&nbsp;</b></label></div>
+            </div>
+        </form>
+
 {% endblock content %}
