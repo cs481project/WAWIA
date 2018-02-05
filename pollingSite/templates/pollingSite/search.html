@@ -1,15 +1,8 @@
 ﻿{% extends 'pollingSite/base.html' %}
-{% block body %}
+{% block content %}
 <body>
-    <div class="container" style="text-align:center">
 
         <!-- columns should be the immediate child of a .row -->
-        <div class="row">
-            <div class="three columns"><button type="submit">Home</button></div>
-            <div class="three columns"><button type="submit" style="background-color: #990000">Search</button></div>
-            <div class="three columns"><button type="submit">Class</button></div>
-            <div class="three columns"><button type="submit">Log Out</button></div>
-        </div>
         <div class="row">
             <label style="text-align:center"><font size="6"><b>Search Records</b></font></label>
         </div>
@@ -22,6 +15,5 @@
         <input type="text" placeholder="Enter StudentID" name="ID" required>
 
         <button type="submit" style="background-color: #990000">Search</button>
-    </div>
 </body>
-{% endblock body %}
+{% endblock content %}
