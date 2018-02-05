@@ -4,18 +4,16 @@
 <div class="row">
     <div class="two columns"><label><b>&nbsp;</b></label></div>
     <div class="five columns"><label style="text-align:right; font-size:xx-large"><b>Total Submissions:</b></label></div>
-    <div class="two columns"><input type="text" readonly /></div>            <div class="four columns"><label><b>&nbsp;</b></label></div>
+    <div class="two columns"><input type="text" readonly /></div><div class="four columns"><label><b>&nbsp;</b></label></div>
 </div>
 
 <div class="row">
-        <li>
             {% for option in options %}
             <div class="row">
                 <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ option }}.</b></label></div>
                 <div class="one column"><input type="text" readonly /></div>
             </div>
-            {% endfor %}
-        </li>           
+            {% endfor %}         
     <div class="row">
     <div class="four columns"><label><b>&nbsp;</b></label></div>
     <div class="four columns"><button type="submit" style="background-color: #990000">Close Poll</button></div>
