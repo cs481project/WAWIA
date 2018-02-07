@@ -2,7 +2,7 @@
 
 {% block content %}
 <div class="row">
-    <div><button type="submit" style="background-color: #990000"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:addClass' %}">Add Class</a></button></div>
+    <div><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:addClass' %}"><button type="submit" style="background-color: #990000">Add Class</button></a></div>
 </div>
 {% for class in classroom %}
 <div class="row">
