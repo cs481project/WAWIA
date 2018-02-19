@@ -1,29 +1,40 @@
 ﻿{% extends 'pollingSite/base.html' %}
+
+
 {% block content %}
-<table style="width:100%">
+
+    <div class="row">
+    <div class="three columns"><label><b>&nbsp;</b></label></div>
+    <div class="six columns"><label style="text-align:center; font-size:xx-large"><b>Class Key: {{ curClass.classKey }}</b></label></div>
+    <div class="three columns"><label><b>&nbsp;</b></label></div>
+
+</div>
+    <table style="width:100%">
     <tr>
         <th>Poll Name</th>
         <th>Possible Answers</th>
         <th>Correct Answer</th>
     </tr>
     {% for poll in polls %}
-                <tr>
-                    <th><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:activePoll' poll.classroom.id poll.id %}">
+    <tr>
+        <th>
+            <a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:activePoll' poll.classroom.id poll.id %}">
                 {{ poll.name }}
-                </a></th>
-                    <th>
-                        <a style="text-decoration:none; color:inherit"href="{% url 'pollingSite:activePoll' poll.classroom.id poll.id %}">
-                            {{ poll.options }}
-                        </a>
-                    </th>
-                    <th>
-                        <a style="text-decoration:none; color:inherit"href="{% url 'pollingSite:activePoll' poll.classroom.id poll.id %}">
-                            {{ poll.correct }}
-                        </a>
-                    </th>
-                </tr>
+            </a>
+        </th>
+        <th>
+            <a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:activePoll' poll.classroom.id poll.id %}">
+                {{ poll.options }}
+            </a>
+        </th>
+        <th>
+            <a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:activePoll' poll.classroom.id poll.id %}">
+                {{ poll.correct }}
+            </a>
+        </th>
+    </tr>
     {% endfor %}
-    
+
 </table>
 <div class="row">
     <div class="four columns"><label><b>&nbsp;</b></label></div>

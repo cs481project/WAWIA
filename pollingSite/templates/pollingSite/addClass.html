@@ -3,20 +3,11 @@
         <form method="post" style="border-color:InactiveBorder">
         {% csrf_token %}
             {{form.as_table}}
-            <div class="row">
-                <div class="three columns"><label><b>&nbsp;</b></label></div>
-                <div class="six columns"><button type="button">Generate Class Key</button></div>
-                <div class="three columns"><label><b>&nbsp;</b></label></div>
-            </div>
-            <div class="row">
-                <div class="four columns"><label><b>&nbsp;</b></label></div>
-                <div class="four columns"><output name="key"><input type="text" readonly /> </output></div>
-                <div class="four columns"><label><b>&nbsp;</b></label></div>
-            </div>
+            
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div class="three columns"><label><b>&nbsp;</b></label></div>
-                <div class="six columns"><button type="submit" style="background-color: #990000">Add Class</button></div>
+                <div class="six columns"><a href="{% url 'pollingSite:index' %}"><button style="background-color: #990000">Add Class</button></div>
                 <div class="three columns"><label><b>&nbsp;</b></label></div>
             </div>
         </form>
