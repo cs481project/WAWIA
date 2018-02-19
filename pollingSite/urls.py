@@ -9,6 +9,7 @@ app_name = 'pollingSite'
 urlpatterns = [
     path('index/', views.index, name='index'),
     path('', auth_views.LoginView.as_view(template_name='pollingSite/login.html'), name='login'),
+	path('receive_sms/', views.recieveSMS, name='sms'),
     path('password_change_done/', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),
     path('change-password/', auth_views.PasswordChangeView.as_view(template_name='pollingSite/changePassword.html'), name='changePassword'),
     path('search/', views.search, name='search'),
