@@ -20,10 +20,6 @@ def index(request):
     return render(request, 'pollingSite/index.html', locals())
 
 @login_required
-def changePassword(request):
-    return render(request, 'pollingSite/changePassword.html', locals())
-
-@login_required
 def search(request):
     return render(request, 'pollingSite/search.html', locals())
 
