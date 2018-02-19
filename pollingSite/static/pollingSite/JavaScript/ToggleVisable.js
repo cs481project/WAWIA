@@ -6,10 +6,19 @@ function myFunction(cl) {
         s.display = s.display === 'none' ? 'block' : 'none';
     };
 }
-function myFunction2(cl1) {
-    var els = document.getElementsByClassName(cl1);
+/*
+function myFunction2(id) {
+    var els = document.getElementById(id);
     for (var i = 0; i < els.length; ++i) {
         var s = els[i].style;
-        s.display = s.display === 'block' ? 'none' : 'block';
+        s.display = s.display === 'none' ? 'block' : 'none';
     };
 }
+function myFunction(cl){
+    var x = document.getElementById(cl);
+    if (x.style.visibility === 'hidden') {
+        x.style.visibility = 'visible';
+    } else {
+        x.style.visibility = 'hidden';
+    }
+}*/

@@ -58,7 +58,7 @@ def attendance(request, classroom):
 @classroomSecureWrapper
 def pollList(request, classroom):
     polls = Poll.objects.filter(classroom=classroom)
-    curClass = classroom
+    curClass = Classroom.objects.get(id=classroom)
     return render(request, 'pollingSite/pollList.html', locals())
 
 @login_required

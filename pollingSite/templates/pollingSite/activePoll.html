@@ -1,4 +1,5 @@
 ﻿{% extends 'pollingSite/base.html' %}
+{% load static %}
 {% block content %}
 <label style="text-align:center"><font size="6"><b>{{ poll.name }}</b></font></label>
 <div class="row">
@@ -13,9 +14,10 @@
 </div>
     <div class="row">
         {% for option in options %}
-        <div id ="asnwers"class="row">
-            <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ option }}.</b></label></div>
-            <div class="one column"><input type="text" readonly /></div>
+        <div id ="answers"class="row">
+            <div class="one column" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="one column"style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
+            
         </div>
         {% endfor %}
         <div class="row">
@@ -26,3 +28,7 @@
         </div>
     </div>
     {% endblock content %}
+
+{% block JavaScrpt %}
+<script src="{% static 'pollingSite/JavaScript/ToggleVisable.js' %}"></script>
+{% endblock JavaScrpt %}
