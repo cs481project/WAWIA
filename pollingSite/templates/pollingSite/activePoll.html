@@ -1,13 +1,30 @@
 ﻿{% extends 'pollingSite/base.html' %}
+<<<<<<< HEAD
 {% load static %}
+=======
+{% block css%}
+<meta http-equiv="refresh" content="1">
+{% endblock css %}
+
+>>>>>>> master
 {% block content %}
 <label style="text-align:center"><font size="6"><b>{{ poll.name }}</b></font></label>
 <div class="row">
-    <div class="two columns"><label><b>&nbsp;</b></label></div>
+    <div class="two columns"><label style="text-align:right; font-size:xx-large"><b>{{poll.key}}</b></label></div>
     <div class="five columns"><label style="text-align:right; font-size:xx-large"><b>Total Submissions:</b></label></div>
-    <div class="two columns"><input type="text" readonly /></div><div class="four columns"><label><b>&nbsp;</b></label></div>
+    <div class="two columns"><input type="text" value="{{totalSub}}" readonly /></div><div class="four columns"><label><b>&nbsp;</b></label></div>
 </div>
 <div class="row">
+<<<<<<< HEAD
+=======
+            {% for option in options %}
+            <div class="row">
+                <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+                <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
+            </div>
+            {% endfor %}
+    <div class="row">
+>>>>>>> master
     <div class="four columns"><label><b>&nbsp;</b></label></div>
     <div class="four columns"><button onclick="myFunction('one column')" style="background-color: #990000"> Toggle Answers </button></div>
     <div class="four columns"><label><b>&nbsp;</b></label></div>
