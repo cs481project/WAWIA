@@ -15,9 +15,13 @@
     <div class="row">
         {% for option in options %}
         <div id ="answers"class="row">
+            {% if forloop.counter == poll.correct %}
+            <div class="one column" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="one column" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
+            {% else %}
             <div class="one column" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
             <div class="one column"style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
-            
+        {% endif %}
         </div>
         {% endfor %}
         <div class="row">
