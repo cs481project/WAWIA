@@ -9,7 +9,6 @@ class ClassroomAdmin(admin.ModelAdmin):
     list_display = ('className', 'classNumber', 'instructor')
 
 class PollAdmin(admin.ModelAdmin):
-    readonly_fields=('key',)
     list_display = ('name', 'classroom', 'startTime', 'stopTime')
 
 class AnswerAdmin(admin.ModelAdmin):

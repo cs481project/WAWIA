@@ -34,15 +34,9 @@ class Poll(models.Model):
     name = models.CharField(max_length = 64)
     options = models.IntegerField()
     correct = models.IntegerField(default=1)
-    key = models.CharField(max_length = 6, unique=True, editable=False)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null=True)
     startTime = models.DateTimeField(null=True)
     stopTime = models.DateTimeField(null=True)
-    def __init__(self, *args, **kwargs):
-        super(Poll, self).__init__(*args, **kwargs)
-        if (self.key == ''):
-            chars = ascii_uppercase + digits
-            self.key = ''.join(choices(chars, k=5))
             
     def __str__(self):
         return self.name
