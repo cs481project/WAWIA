@@ -77,6 +77,7 @@ def attendanceForm(request, classroom):
     curClass=classroom
     
     totalnumbers = 0
+    totalnumbers2 = 0
     answers = []
     correctAnswer = []
     students = []
@@ -108,7 +109,8 @@ def attendanceForm(request, classroom):
                             for b in range(a+1, len(polllist2)):
                                 if (polllist2[a].stopTime .date()== polllist2[b].stopTime.date()):
                                     del polllist2[b]
-
+            totalnumbers=(len(correctAnswer)/len(answers))*100
+            totalnumbers2=(len(polllist)/len(polllist2))*100
             return render(request, 'pollingSite/attendance.html', locals())
     else:
         form = attendanceFormForm()
