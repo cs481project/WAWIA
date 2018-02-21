@@ -7,6 +7,13 @@
 {% for class in classroom %}
 <div class="row">
     <div class="six columns">
+        {% ifchanged class.quarter or class.year %}
+        <br/>
+        <font size="6" style="">
+               <u> {{ class.get_quarter_display }} {{ class.year }}</u>
+        </font>
+        <br/>
+        {% endifchanged %}
         <font size="3">
         <a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:pollList' class.id %}">
             {{ class.className }}

@@ -9,16 +9,15 @@ SEASONS = ((0, "Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
 class Classroom(models.Model):
     classNumber = models.CharField(max_length = 20, unique=True)
     className = models.CharField(max_length = 64, default=classNumber)
-    classKey = models.CharField(max_length = 6, unique=True, default='123456')
-    
-    #quarter = models.IntegerField(choices=SEASONS)
-    #year = models.IntegerField(choices=[(i,i) for i in range(2018, datetime.now().year + 1)])
+    classKey = models.CharField(max_length = 6, unique=True)
+    quarter = models.IntegerField(choices=SEASONS)
+    year = models.IntegerField(choices=[(i,i) for i in range(2018, datetime.now().year + 1)])
     instructor = models.ForeignKey(User, on_delete=models.CASCADE) #change on_delete
     def __str__(self):
         return self.className
     def __init__(self, *args, **kwargs):
         super(Classroom, self).__init__(*args, **kwargs)
-        if(self.classKey==''):
+        if(self.classKey == ''):
             chars = ascii_uppercase + digits
             self.classKey = ''.join(choices(chars, k=5))
 

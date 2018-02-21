@@ -39,7 +39,7 @@ def recieveSMS(request):
 	
 @login_required
 def index(request):
-    classroom = Classroom.objects.filter(instructor=request.user)
+    classroom = Classroom.objects.filter(instructor=request.user).order_by("-year", "-quarter")
     return render(request, 'pollingSite/index.html', locals())
 
 @login_required
@@ -51,7 +51,11 @@ def addClass(request):
     if request.method == 'POST':
         form = createClassForm(request.POST)
         if form.is_valid():
-            Classroom.objects.create(className=form.cleaned_data['class_name'], classNumber=form.cleaned_data['class_id'], instructor=request.user)
+            Classroom.objects.create(className=form.cleaned_data['class_name'], 
+                classNumber=form.cleaned_data['class_id'], 
+                quarter = form.cleaned_data['quarter'],
+                year=form.cleaned_data['year'],
+                instructor=request.user)
             return index(request);
     else:
         form = createClassForm()
