@@ -10,3 +10,7 @@ class createPollForm(forms.Form):
     correct_answer = forms.IntegerField()
     #start_time = forms.DateTimeField()
     #end_time = forms.DateTimeField()
+
+class attendanceFormForm(forms.Form):
+    start_date = forms.DateField()
+    end_date = forms.DateField()

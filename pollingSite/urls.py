@@ -16,6 +16,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('<str:classroom>/', views.classroom, name='classroom'),
     path('<str:classroom>/attendance/', views.attendance, name='attendance'),
+    path('<str:classroom>/attendanceform/', views.attendanceForm, name='attendanceForm'),
     path('<str:classroom>/polllist/', views.pollList, name='pollList'),
     path('<str:classroom>/createpoll/', views.createPoll, name='createPoll'),
     path('<str:classroom>/<int:poll>/active/', views.activePoll, name='activePoll'),
