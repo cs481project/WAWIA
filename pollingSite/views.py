@@ -1,14 +1,14 @@
+import uuid
+import itertools
+from datetime import datetime, timedelta,date
 from django import template
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.crypto import get_random_string
 from django.utils.timezone import now
-from datetime import datetime, timedelta,date
-import uuid
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import login as authLogin
 from django.views.decorators.csrf import csrf_exempt
-import itertools
 from django.db.models.functions import Trunc
 
 from .models import *
@@ -41,7 +41,7 @@ def recieveSMS(request):
 	
 @login_required
 def index(request):
-    classroom = Classroom.objects.filter(instructor=request.user)
+    classroom = Classroom.objects.filter(instructor=request.user).order_by("-year", "-quarter")
     return render(request, 'pollingSite/index.html', locals())
 
 @login_required
@@ -53,7 +53,11 @@ def addClass(request):
     if request.method == 'POST':
         form = createClassForm(request.POST)
         if form.is_valid():
-            Classroom.objects.create(className=form.cleaned_data['class_name'], classNumber=form.cleaned_data['class_id'], instructor=request.user)
+            Classroom.objects.create(className=form.cleaned_data['class_name'], 
+                classNumber=form.cleaned_data['class_id'], 
+                quarter = form.cleaned_data['quarter'],
+                year=form.cleaned_data['year'],
+                instructor=request.user)
             return index(request);
     else:
         form = createClassForm()
