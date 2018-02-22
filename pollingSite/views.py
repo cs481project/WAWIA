@@ -1,13 +1,15 @@
+import uuid
+import itertools
+from datetime import datetime, timedelta,date
 from django import template
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.crypto import get_random_string
 from django.utils.timezone import now
-from datetime import datetime
-import uuid
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import login as authLogin
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models.functions import Trunc
 
 from .models import *
 from .forms import *
@@ -72,6 +74,51 @@ def classroom(request, classroom):
 @classroomSecureWrapper
 def attendance(request, classroom):
     return render(request, 'pollingSite/attendance.html', locals())
+
+@login_required
+@classroomSecureWrapper
+def attendanceForm(request, classroom):
+    curClass=classroom
+    
+    totalnumbers = 0
+    totalnumbers2 = 0
+    answers = []
+    correctAnswer = []
+    students = []
+    polllist = []
+    polllist2 = []
+    polls = Poll.objects.filter(classroom=curClass)
+    if request.method == 'POST':
+        form = attendanceFormForm(request.POST)
+        if form.is_valid():
+            start_t = form.cleaned_data['start_date']
+            end_t = form.cleaned_data['end_date']
+            students = Student.objects.filter(classrooms=curClass)
+            for student1 in students:
+                answers = Answer.objects.filter(student=student1,timestamp__gte=start_t, timestamp__lt=end_t + timedelta(days=1))
+                for answer in answers:
+                    if answer.timestamp.date() >= start_t and answer.timestamp.date() <= end_t:
+                        polllist.append(answer)
+                    for poll in polls:
+                        if poll.stopTime.date() >= start_t and poll.stopTime.date() <= end_t:
+                            polllist2.append(poll)
+                        if poll.startTime < answer.timestamp < poll.stopTime and answer.value == poll.correct:
+                            correctAnswer.append(answer)
+                        for a in range(len(polllist)):
+                            for b in range(a+1, len(polllist)):
+                                if (polllist[a].timestamp.date() == polllist[b].timestamp.date()):
+                                    del polllist[b]
+
+                        for a in range(len(polllist2)):
+                            for b in range(a+1, len(polllist2)):
+                                if (polllist2[a].stopTime .date()== polllist2[b].stopTime.date()):
+                                    del polllist2[b]
+            totalnumbers=(len(correctAnswer)/len(answers))*100
+            totalnumbers2=(len(polllist)/len(polllist2))*100
+            return render(request, 'pollingSite/attendance.html', locals())
+    else:
+        form = attendanceFormForm()
+        return render(request, 'pollingSite/attendanceForm.html', locals())
 
 @login_required
 @classroomSecureWrapper
