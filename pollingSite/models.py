@@ -7,7 +7,7 @@ from datetime import datetime
 SEASONS = ((0, "Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
 
 class Classroom(models.Model):
-    classNumber = models.CharField(max_length = 20, unique=True)
+    classNumber = models.CharField(max_length = 20, default="")
     className = models.CharField(max_length = 64, default=classNumber)
     classKey = models.CharField(max_length = 6, unique=True)
     quarter = models.IntegerField(choices=SEASONS)
@@ -20,6 +20,22 @@ class Classroom(models.Model):
         if(self.classKey == ''):
             chars = ascii_uppercase + digits
             self.classKey = ''.join(choices(chars, k=5))
+
+    def duplicate(self, user, quarter, year):
+        dupe = Classroom.objects.create(instructor = user,
+                                        className=self.className+' copy',
+                                        classNumber=self.classNumber,
+                                        quarter=quarter, 
+                                        year=year)
+        dupe.save()
+        for poll in Poll.objects.filter(classroom=self):
+            newPoll = Poll.objects.create(
+                                name=poll.name,
+                                options=poll.options,
+                                correct=poll.correct,
+                                classroom=dupe,
+                                )
+            newPoll.save()
 
 class Student(models.Model):
     name = models.CharField(max_length = 128)

@@ -16,12 +16,7 @@
     <div class="container" >
 
         <!-- columns should be the immediate child of a .row -->
-        <div class="row">
-            <div class="three columns"><a href="{% url 'pollingSite:index' %}"><button type="submit" >Home</button></a></div>
-            <div class="three columns"><a href="{% url 'pollingSite:search' %}"><button type="submit">Search</button></a></div>
-            <div class="three columns"><a href="{% url 'pollingSite:changePassword' %}"><button type="submit"style="background-color: #990000">Change Password</button></a></div>
-            <div class="three columns"><a href="{% url 'pollingSite:logout' %}"><button type="submit">Log Out</button></a></div>
-       </div>
+        {% block navbar %}{% include 'pollingSite/navbar.html' %}{% endblock navbar %}
        {% block content %}{% endblock content %}
     </div>
     {% block JavaScrpt %}{% endblock JavaScrpt %}

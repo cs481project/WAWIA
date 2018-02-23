@@ -18,3 +18,8 @@ class createPollForm(forms.Form):
 class attendanceFormForm(forms.Form):
     start_date = forms.DateField()
     end_date = forms.DateField()
+
+class settingForm(forms.Form):
+    email = forms.CharField(max_length=50, required=False)
+    first_name = forms.CharField(max_length=50, required=False)
+    last_name = forms.CharField(max_length=50, required=False)

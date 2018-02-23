@@ -38,15 +38,72 @@ def recieveSMS(request):
         newStudent = Answer.objects.create(poll=Poll.objects.get(key=incoming_text[0]), value=incoming_text[1], timestamp=now(), student=Student.objects.get(name='FakeNews'))
         return HttpResponse("Message Received")
 
-	
+def landing(request):
+    if request.user.is_authenticated:
+        return redirect('pollingSite:index')
+    else:
+        return redirect('pollingSite:login')
+
 @login_required
 def index(request):
+    first_name = ""
+    last_name = ""
+    username = ""
+    if request.user.first_name == "":
+        if request.user.last_name == "":
+            username = request.user.get_username()
+            return render(request, 'pollingSite/index.html',locals())
+        else:
+            last_name = request.user.last_name
+            return render(request, 'pollingSite/index.html',locals())
+    else:
+        first_name = request.user.first_name
+        if request.user.last_name == "":
+            return render(request, 'pollingSite/index.html',locals())
+        else:
+            last_name = request.user.last_name
+            return render(request, 'pollingSite/index.html',locals())
+
+@login_required
+def pollAdmin(request):
+    return addSearchClass(request)
+
+@login_required
+def addSearchClass(request):
     classroom = Classroom.objects.filter(instructor=request.user).order_by("-year", "-quarter")
-    return render(request, 'pollingSite/index.html', locals())
+    return render(request, 'pollingSite/addSearchClass.html', locals())
+
+@login_required
+def copy(request, classroom):
+    classroom = Classroom.objects.get(pk=classroom)
+    classroom.duplicate(request.user, classroom.quarter, classroom.year)
+    return redirect('pollingSite:pollAdmin')
+
+@login_required
+def settings(request):
+    email = request.user.email
+    first_name = request.user.first_name
+    last_name = request.user.last_name
+    if request.method == 'POST':
+        form = settingForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username=request.user.get_username())
+            user.email = form.cleaned_data['email']
+            user.first_name = form.cleaned_data['first_name']
+            user.last_name = form.cleaned_data['last_name']
+            user.save()
+            return HttpResponse('Changed Email')
+    else:
+        form = settingForm(initial={'email':email, 'first_name':first_name, 'last_name':last_name})
+        return render(request, 'pollingSite/setting.html', locals())
 
 @login_required
 def search(request):
     return render(request, 'pollingSite/search.html', locals())
+
+@login_required
+def report(request):
+    return HttpResponse('Report')
 
 @login_required
 def addClass(request):
@@ -58,7 +115,7 @@ def addClass(request):
                 quarter = form.cleaned_data['quarter'],
                 year=form.cleaned_data['year'],
                 instructor=request.user)
-            return index(request);
+            return redirect('pollingSite:pollAdmin');
     else:
         form = createClassForm()
         return render(request, 'pollingSite/addClass.html', locals())
@@ -82,8 +139,8 @@ def attendanceForm(request, classroom):
     
     totalnumbers = 0
     totalnumbers2 = 0
-    answers = []
-    correctAnswer = []
+    
+    
     students = []
     polllist = []
     polllist2 = []
@@ -95,11 +152,14 @@ def attendanceForm(request, classroom):
             end_t = form.cleaned_data['end_date']
             students = Student.objects.filter(classrooms=curClass)
             for student1 in students:
+                
+                answers = []
                 answers = Answer.objects.filter(student=student1,timestamp__gte=start_t, timestamp__lt=end_t + timedelta(days=1))
                 for answer in answers:
                     if answer.timestamp.date() >= start_t and answer.timestamp.date() <= end_t:
                         polllist.append(answer)
                     for poll in polls:
+                        correctAnswer = []
                         if poll.stopTime.date() >= start_t and poll.stopTime.date() <= end_t:
                             polllist2.append(poll)
                         if poll.startTime < answer.timestamp < poll.stopTime and answer.value == poll.correct:
@@ -107,12 +167,12 @@ def attendanceForm(request, classroom):
                         for a in range(len(polllist)):
                             for b in range(a+1, len(polllist)):
                                 if (polllist[a].timestamp.date() == polllist[b].timestamp.date()):
-                                    del polllist[b]
+                                    del polllist[a]
 
-                        for a in range(len(polllist2)):
-                            for b in range(a+1, len(polllist2)):
-                                if (polllist2[a].stopTime .date()== polllist2[b].stopTime.date()):
-                                    del polllist2[b]
+                        for c in range(len(polllist2)):
+                            for d in range(c+1, len(polllist2)):
+                                if (polllist2[c].stopTime.date()== polllist2[d].stopTime.date()):
+                                    del polllist2[c]
             totalnumbers=(len(correctAnswer)/len(answers))*100
             totalnumbers2=(len(polllist)/len(polllist2))*100
             return render(request, 'pollingSite/attendance.html', locals())
