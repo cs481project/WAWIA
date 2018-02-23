@@ -1,5 +1,6 @@
 {% extends 'pollingSite/base.html' %}
 {% block content %}
+<label style="text-align:center"><font size="6"><b>User Settings</b></font></label>
         <form method="post" style="border-color:InactiveBorder">
         {% csrf_token %}
             {{form.as_table}}
@@ -7,9 +8,11 @@
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div class="three columns"><label><b>&nbsp;</b></label></div>
-                <div class="six columns"><button style="background-color: #990000">Add Class</button></div>
+                <div class="six columns"><a href="{% url 'pollingSite:index' %}"><button style="background-color: #990000">Update Information</button></div>
                 <div class="three columns"><label><b>&nbsp;</b></label></div>
             </div>
         </form>
+        <div class="twelve columns"><label><b>&nbsp;</b></label></div>
+         <iframe width='100%' frameborder="0" height='600'src="{% url 'pollingSite:changePassword' %}"></iframe> 
 
 {% endblock content %}

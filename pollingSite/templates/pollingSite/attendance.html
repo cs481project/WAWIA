@@ -1,13 +1,14 @@
 ﻿{% extends 'pollingSite/base.html' %}
 {% block content %}
 <div class="row">&nbsp;</div>
-{% for student in students %}
+
 <table style="width:100%">
     <tr>
         <th><label style="text-align:left; font-size:x-large">Student Name</label></th>
         <th><label style="text-align:left; font-size:x-large">Correct Answers</label></th>
         <th><label style="text-align:left; font-size:x-large">Attendance</label></th>
     </tr>
+    {% for student in students %}
     <tr>
         <th>{{ student.name }}</th>
         <th>{{correctAnswer|length}}/{{answers|length}}&nbsp;&nbsp;{{totalnumbers}}% </th>
