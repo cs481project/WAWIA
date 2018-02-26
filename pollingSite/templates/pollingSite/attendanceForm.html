@@ -1,0 +1,10 @@
+﻿{% extends 'pollingSite/base.html' %}
+{% block content %}
+<form method="post" style="border-color:InactiveBorder">
+    {% csrf_token %}
+        {{form.as_table}}
+    <div class="row">
+        <button type="submit" style="background-color: #990000">Search</button>
+    </div>
+</form>
+{% endblock content %}

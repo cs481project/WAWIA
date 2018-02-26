@@ -7,25 +7,74 @@
     <div class="five columns"><label style="text-align:right; font-size:xx-large"><b>Total Submissions:</b></label></div>
     <div class="two columns"><label style="text-align:right; font-size:xx-large"><b>{{totalSub}}</b></label></div>
 </div>
-<div class="row">
-    <div class="four columns"><label><b>&nbsp;</b></label></div>
-    <div class="four columns"><button onclick="myFunction('one column')" style="background-color: #990000"> Toggle Answers </button></div>
-    <div class="four columns"><label><b>&nbsp;</b></label></div>
-</div>
+
+
     <div class="row">
+
+        {% if poll.correct == 0 %}
+        <div class="row">
+            <div class="four columns"><label><b>&nbsp;</b></label></div>
+            <div class="four columns"><button onclick="myFunction('one column')" style="background-color: #990000"> Toggle Answers </button></div>
+            <div class="four columns"><label><b>&nbsp;</b></label></div>
+        </div>
         {% for option in options %}
-        <div id ="answers"class="row">
+        <div id="answers" class="row">
+            {% if forloop.counter == poll.correct %}
+            <div class="one column" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="one column" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
+            {% else %}
             <div class="one column" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
-            <div class="one column"style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>   
+            <div class="one column" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <form method="post" style="border-color:InactiveBorder">
+            <div class="row" id="Start" style="display:block">
+                <div class="four columns"><label><b>&nbsp;</b></label></div>
+                <div class="four columns"><button type="button" onclick="myFunction2('Stop'); myFunction3(poll);" style="background-color: #990000"> Start Poll </button></div>
+                <div class="four columns"><label><b>&nbsp;</b></label></div>
+            </div>
+            <div class="row" id="Stop" style="display:none">
+                <div class="four columns"><label><b>&nbsp;</b></label></div>
+                <div class="four columns"><button type="button" onclick="myFunction2('Close'); myfunction4(poll);" style="background-color: #990000"> Stop Poll </button></div>
+                <div class="four columns"><label><b>&nbsp;</b></label></div>
+            </div>
+            <div class="row" id="Close" style="display:none">
+                {% csrf_token %}
+                {{form.as_table}}
+                <div class="row">
+                    <div class="four columns"><label><b>&nbsp;</b></label></div>
+                    <div class="four columns"><a style="text-decoration:none; color:inherit"><button type="submit" style="background-color: #990000"> Close Poll </button></a></div>
+                    <div class="four columns"><label><b>&nbsp;</b></label></div>
+                </div>
+            </div>
+        </form>
+        {% else %}
+        {% for option in options %}
+        <div id="answers" class="row">
+            {% if forloop.counter == poll.correct %}
+            <div class="one column"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="one column"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
+            {% else %}
+            <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
+            {% endif %}
         </div>
         {% endfor %}
         <div class="row">
             <div class="four columns"><label><b>&nbsp;</b></label></div>
-            <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:pollList' poll.classroom.id %}"><button type="submit" style="background-color: #990000"> Close Poll </button></a></div>
+            <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:pollList' poll.classroom.id %}"><button type="button" style="background-color: #990000"> Close Poll </button></a></div>
             <div class="four columns"><label><b>&nbsp;</b></label></div>
-
         </div>
-    </div>
+        
+        {% endif %}
+
+
+    
+        
+
+
+</div>
     {% endblock content %}
 
 {% block JavaScrpt %}

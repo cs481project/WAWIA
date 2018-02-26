@@ -7,7 +7,7 @@ from datetime import datetime
 SEASONS = ((0, "Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
 
 class Classroom(models.Model):
-    classNumber = models.CharField(max_length = 20, unique=True)
+    classNumber = models.CharField(max_length = 20, default="")
     className = models.CharField(max_length = 64, default=classNumber)
     classKey = models.CharField(max_length = 6, unique=True)
     quarter = models.IntegerField(choices=SEASONS)
@@ -21,6 +21,22 @@ class Classroom(models.Model):
             chars = ascii_uppercase + digits
             self.classKey = ''.join(choices(chars, k=5))
 
+    def duplicate(self, user, quarter, year):
+        dupe = Classroom.objects.create(instructor = user,
+                                        className=self.className+' copy',
+                                        classNumber=self.classNumber,
+                                        quarter=quarter, 
+                                        year=year)
+        dupe.save()
+        for poll in Poll.objects.filter(classroom=self):
+            newPoll = Poll.objects.create(
+                                name=poll.name,
+                                options=poll.options,
+                                correct=poll.correct,
+                                classroom=dupe,
+                                )
+            newPoll.save()
+
 class Student(models.Model):
     name = models.CharField(max_length = 128)
     studentID = models.IntegerField(unique=True)
@@ -32,10 +48,10 @@ class Student(models.Model):
 class Poll(models.Model):
     name = models.CharField(max_length = 64)
     options = models.IntegerField()
-    correct = models.IntegerField(default=1)
+    correct = models.IntegerField(default=0)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null=True)
-    startTime = models.DateTimeField(null=True)
-    stopTime = models.DateTimeField(null=True)
+    startTime = models.DateTimeField(editable=True,null=True)
+    stopTime = models.DateTimeField(editable=True,null=True)
             
     def __str__(self):
         return self.name
