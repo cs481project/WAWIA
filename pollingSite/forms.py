@@ -24,6 +24,10 @@ class attendanceFormForm(forms.Form):
     start_date = forms.DateField()
     end_date = forms.DateField()
 
+class activePollForm(forms.Form):
+    start_time = forms.DateTimeField()
+    end_time = forms.DateTimeField()
+
 class settingForm(forms.Form):
     email = forms.CharField(max_length=50, required=False)
     first_name = forms.CharField(max_length=50, required=False)
