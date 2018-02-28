@@ -39,6 +39,7 @@ class Classroom(models.Model):
 
 class Student(models.Model):
     name = models.CharField(max_length = 128)
+    lastname = models.CharField(max_length = 128, default='smith')
     studentID = models.IntegerField(unique=True)
     phoneNumber = models.CharField(max_length = 20, null=True)
     classrooms = models.ManyToManyField(Classroom)

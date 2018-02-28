@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import login as authLogin
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models.functions import Trunc
+import operator
 
 from .models import *
 from .forms import *
@@ -104,8 +105,7 @@ def search(request):
 @login_required
 def report(request):
     
-    totalnumbers = 0
-    totalnumbers2 = 0
+    
     students = []
     
     
@@ -119,28 +119,38 @@ def report(request):
             end_t = form.cleaned_data['end_date']
             curClass=form.cleaned_data['choose_class']
             students = Student.objects.filter(classrooms=curClass)
-            
-            
-            
-            
+            students = sorted(students, key=operator.attrgetter('lastname'))
+            print(curClass)
             for student1 in students:
                 correctAnswer = []
                 answers = []
                 polllist = []
-                answers = Answer.objects.filter(student=student1,timestamp__gte=start_t, timestamp__lt=end_t + timedelta(days=1))
+                totalnumbers = 0.0
+                totalnumbers2 = 0.0
+                answers = Answer.objects.filter(student=student1)
                 polls = Poll.objects.filter(classroom=curClass)
+                print(answers)
                 for poll in polls: 
-                    if poll.startTime.date() >= start_t and poll.stopTime.date() <= end_t+ timedelta(days=1):
+                    answerstopolls = [] 
+                    
+                    
+                    
+                    if poll.startTime.date() >= start_t and poll.stopTime.date() <= end_t:
                         polllist.append(poll) 
-                        answerstopolls = []   
+                        
                         for answer in answers:
-                            if answer.timestamp.date() >= start_t and answer.timestamp.date() <= end_t+ timedelta(days=1):
+                            print(start_t)
+                            print(answer.timestamp.date())
+                            print(end_t)
+                            if answer.timestamp.date() >= start_t and answer.timestamp.date() <= end_t+ timedelta(days=1) and curClass == answer.poll.classroom:
                                 answerstopolls.append(answer)
                         
                             if poll.startTime <= answer.timestamp and answer.timestamp <= poll.stopTime and answer.value == poll.correct and student1.name==answer.student.name:
                                 correctAnswer.append(answer)
-                        totalnumbers=((len(correctAnswer)/len(answerstopolls))*100)
-                        totalnumbers2=((len(answerstopolls)/len(polllist))*100)
+                        if(len(answerstopolls)!=0):
+                            totalnumbers=((len(correctAnswer)/len(answerstopolls))*100)
+                        if(len(polllist)!=0):
+                            totalnumbers2=((len(answerstopolls)/len(polllist))*100)
                 items += list(itertools.zip_longest([correctAnswer],[answerstopolls],[polllist],[student1],[totalnumbers],[totalnumbers2],fillvalue='-'))
             enumerated_items = enumerate(items)
         return render(request, 'pollingSite/report.html', locals())
