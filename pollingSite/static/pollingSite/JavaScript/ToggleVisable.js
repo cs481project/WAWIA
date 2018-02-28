@@ -7,6 +7,7 @@ function myFunction(cl) {
     };
 }
 
+
 var divs = ["Start", "Stop", "Close"];
 var visibleDivId = null;
 function myFunction2(divId) {
@@ -37,12 +38,3 @@ function myfunction4(poll) {
     poll.stopTime = datetime.now();
     poll.save(update_fields = ['stopTime']);
 }
-/*
-function myFunction(cl){
-    var x = document.getElementById(cl);
-    if (x.style.visibility === 'hidden') {
-        x.style.visibility = 'visible';
-    } else {
-        x.style.visibility = 'hidden';
-    }
-}*/

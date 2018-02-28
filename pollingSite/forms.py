@@ -6,21 +6,25 @@ from django.db.models import Count
 
 class createClassForm(forms.Form):
     class_name = forms.CharField(max_length=50)
-    class_id = forms.CharField(max_length=50)
+    quarter = forms.ChoiceField(choices=SEASONS)
+    year = forms.ChoiceField(choices=[(i,i) for i in range(2018, datetime.now().year + 2)])
+
+class copyClassForm(forms.Form):
+    class_name = forms.CharField(max_length=50)
     quarter = forms.ChoiceField(choices=SEASONS)
     year = forms.ChoiceField(choices=[(i,i) for i in range(2018, datetime.now().year + 2)])
 
 class createPollForm(forms.Form):
+    possible_answers = forms.ChoiceField(choices=[(i,i) for i in range(2,13)], label="# of options for this poll")
     choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
     new_poll_name = forms.CharField(max_length=100)
-    possible_answers = forms.IntegerField()
 
 class correctAnswerForm(forms.Form):
     correct_answer = forms.IntegerField(required = True)
 
 class attendanceFormForm(forms.Form):
-    start_date = forms.DateField()
-    end_date = forms.DateField()
+    start_date = forms.DateField(widget=forms.SelectDateWidget)
+    end_date = forms.DateField(widget=forms.SelectDateWidget)
 
 class activePollForm(forms.Form):
     start_time = forms.DateTimeField()

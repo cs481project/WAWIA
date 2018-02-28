@@ -14,6 +14,8 @@ class PollAdmin(admin.ModelAdmin):
 class AnswerAdmin(admin.ModelAdmin):
     list_display = ('poll', 'student', 'timestamp')
 
+
+admin.site.register(InstructorUser)
 admin.site.register(Student, StudentAdmin)
 admin.site.register(Classroom, ClassroomAdmin)
 admin.site.register(Poll, PollAdmin)

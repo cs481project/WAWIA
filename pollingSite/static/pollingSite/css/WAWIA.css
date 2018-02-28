@@ -11,7 +11,7 @@ input[type=text], input[type=password] {
     display: inline-block;
     border: 1px solid #ccc;
     box-sizing: border-box;
-    text-align: center;
+    text-align: left;
 }
 banner {
     position: absolute;

@@ -1,10 +1,13 @@
 from string import ascii_uppercase, digits
 from random import choices
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 
 SEASONS = ((0,"Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
+
+class InstructorUser(AbstractUser):
+    activeClass = models.OneToOneField('Classroom', blank = True, on_delete=models.SET_NULL, null=True)
 
 class Classroom(models.Model):
     classNumber = models.CharField(max_length = 20, default="")
@@ -12,7 +15,7 @@ class Classroom(models.Model):
     classKey = models.CharField(max_length = 6, unique=True)
     quarter = models.IntegerField(choices=SEASONS)
     year = models.IntegerField(choices=[(i,i) for i in range(2018, datetime.now().year + 1)])
-    instructor = models.ForeignKey(User, on_delete=models.CASCADE) #change on_delete
+    instructor = models.ForeignKey(InstructorUser, on_delete=models.SET_NULL, null=True) #change on_delete
     def __str__(self):
         return self.className
     def __init__(self, *args, **kwargs):
@@ -21,9 +24,9 @@ class Classroom(models.Model):
             chars = ascii_uppercase + digits
             self.classKey = ''.join(choices(chars, k=5))
 
-    def duplicate(self, user, quarter, year):
+    def duplicate(self, user, name, quarter, year):
         dupe = Classroom.objects.create(instructor = user,
-                                        className=self.className+' copy',
+                                        className=name,
                                         classNumber=self.classNumber,
                                         quarter=quarter, 
                                         year=year)
