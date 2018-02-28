@@ -24,9 +24,15 @@
         <div class="three columns"><a href="{% url 'pollingSite:pollAdmin' %}"><button type="submit">Add/Select Class</button></a></div>
     {% endif %}
     {% if 'runpoll/' in request.path %}
-        <div class="three columns"><a href="{% url 'pollingSite:createPoll' 1%}"><button type="submit" style="background-color: #990000">Run Poll</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:createPoll' 1%}"><button type="submit" style="background-color: #990000">Create/Run Poll</button></a></div>
+    {% elif 'polllist/' in request.path %}
+        <div class="three columns"><a href="{% url 'pollingSite:createPoll' 1%}"><button type="submit" style="background-color: #990000">Create/Run Poll</button></a></div>
+    {% elif 'createpoll/' in request.path %}
+        <div class="three columns"><a href="{% url 'pollingSite:createPoll' 1%}"><button type="submit" style="background-color: #990000">Create/Run Poll</button></a></div>
+    {% elif 'active/' in request.path %}
+        <div class="three columns"><a href="{% url 'pollingSite:createPoll' 1%}"><button type="submit" style="background-color: #990000">Create/Run Poll</button></a></div>
     {% else %}
-        <div class="three columns"><a href="{% url 'pollingSite:createPoll' 1%}"><button type="submit">Run Poll</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:createPoll' 1%}"><button type="submit">Create/Run Poll</button></a></div>
     {% endif %}
     {% if 'search/' in request.path %}
         <div class="three columns"><a href="{% url 'pollingSite:search' %}"><button type="submit" style="background-color: #990000">Search Student</button></a></div>

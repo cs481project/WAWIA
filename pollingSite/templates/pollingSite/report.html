@@ -1,0 +1,34 @@
+﻿{% extends 'pollingSite/base.html' %}
+{% block content %}
+<div class="row">&nbsp;</div>
+<form method="post">
+    {% csrf_token %}
+    {{form.as_table}}
+    <div class="row">
+        <button type="submit" style="background-color: #990000">Generate Report</button>
+    </div>
+</form>
+    <table style="width:100%">
+        <tr>
+            <th><label style="text-align:left; font-size:x-large">Student Name</label></th>
+            <th><label style="text-align:left; font-size:x-large">StudentID</label></th>
+            <th><label style="text-align:left; font-size:x-large">Correct Answers</label></th>
+            <th><label style="text-align:left; font-size:x-large">Attendance</label></th>
+        </tr>
+
+
+        {% for item in items %}
+
+
+        <tr>
+            <th>{{item.3.lastname}} {{item.3.name}}</th>
+            <th>{{item.3.studentID}}</th>
+            <th>{{item.0|length}}/{{item.1|length}}&nbsp;&nbsp;{{item.4}}% </th>
+            <th>{{item.1|length}}/{{item.2|length}}&nbsp;&nbsp;{{item.5}}%</th>
+        </tr>
+
+
+        {%endfor%}
+
+    </table>
+    {% endblock content %}
