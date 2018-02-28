@@ -104,14 +104,9 @@ def search(request):
 
 @login_required
 def report(request):
-    
-    
     students = []
-    
-    
     w = 7
     items = []
-    
     if request.method == 'POST':
         form = reportForm(request.POST)
         if form.is_valid():
@@ -132,19 +127,14 @@ def report(request):
                 print(answers)
                 for poll in polls: 
                     answerstopolls = [] 
-                    
-                    
-                    
                     if poll.startTime.date() >= start_t and poll.stopTime.date() <= end_t:
                         polllist.append(poll) 
-                        
                         for answer in answers:
                             print(start_t)
                             print(answer.timestamp.date())
                             print(end_t)
                             if answer.timestamp.date() >= start_t and answer.timestamp.date() <= end_t+ timedelta(days=1) and curClass == answer.poll.classroom:
                                 answerstopolls.append(answer)
-                        
                             if poll.startTime <= answer.timestamp and answer.timestamp <= poll.stopTime and answer.value == poll.correct and student1.name==answer.student.name:
                                 correctAnswer.append(answer)
                         if(len(answerstopolls)!=0):
@@ -154,7 +144,6 @@ def report(request):
                 items += list(itertools.zip_longest([correctAnswer],[answerstopolls],[polllist],[student1],[totalnumbers],[totalnumbers2],fillvalue='-'))
             enumerated_items = enumerate(items)
         return render(request, 'pollingSite/report.html', locals())
-        
     else:
         form = reportForm()
         return render(request, 'pollingSite/report.html', locals())
