@@ -29,14 +29,10 @@
         </div>
         {% endfor %}
         <form method="post" style="border-color:InactiveBorder">
-            <div class="row" id="Start" style="display:block">
+            
+            <div class="row" id="Stop" style="display:block">
                 <div class="four columns"><label><b>&nbsp;</b></label></div>
-                <div class="four columns"><button type="button" onclick="myFunction2('Stop'); myFunction3(poll);" style="background-color: #990000"> Start Poll </button></div>
-                <div class="four columns"><label><b>&nbsp;</b></label></div>
-            </div>
-            <div class="row" id="Stop" style="display:none">
-                <div class="four columns"><label><b>&nbsp;</b></label></div>
-                <div class="four columns"><button type="button" onclick="myFunction2('Close'); myfunction4(poll);" style="background-color: #990000"> Stop Poll </button></div>
+                <div class="four columns"><button type="button" onclick="myFunction2('Close'); myfunction4(poll);" style="background-color: #990000"> Close Poll </button></div>
                 <div class="four columns"><label><b>&nbsp;</b></label></div>
             </div>
             <div class="row" id="Close" style="display:none">
@@ -44,7 +40,7 @@
                 {{form.as_table}}
                 <div class="row">
                     <div class="four columns"><label><b>&nbsp;</b></label></div>
-                    <div class="four columns"><a style="text-decoration:none; color:inherit"><button type="submit" style="background-color: #990000"> Close Poll </button></a></div>
+                    <div class="four columns"><a style="text-decoration:none; color:inherit"><button type="submit" style="background-color: #990000"> Show Responses </button></a></div>
                     <div class="four columns"><label><b>&nbsp;</b></label></div>
                 </div>
             </div>
@@ -63,7 +59,7 @@
         {% endfor %}
         <div class="row">
             <div class="four columns"><label><b>&nbsp;</b></label></div>
-            <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:pollList' poll.classroom.id %}"><button type="button" style="background-color: #990000"> Close Poll </button></a></div>
+            <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:pollList' poll.classroom.id %}"><button type="button" style="background-color: #990000"> Run New Poll=].button></a></div>
             <div class="four columns"><label><b>&nbsp;</b></label></div>
         </div>
         

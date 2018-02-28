@@ -34,6 +34,6 @@ class settingForm(forms.Form):
     last_name = forms.CharField(max_length=50, required=False)
 
 class reportForm(forms.Form):
-    choose_class2 = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
+    choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
     start_date = forms.DateField()
     end_date = forms.DateField()

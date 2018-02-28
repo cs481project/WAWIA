@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 
-SEASONS = ((0, "Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
+SEASONS = ((0,"Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
 
 class Classroom(models.Model):
     classNumber = models.CharField(max_length = 20, default="")
