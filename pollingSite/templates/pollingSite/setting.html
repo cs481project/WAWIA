@@ -4,7 +4,7 @@
 {% if message is not None %}
 <label style="text-align:center"><font style="color:#990000" size="4"><b>{{message}}</b></font></label>
 {% endif %}
-        <form method="post" style="border-color:InactiveBorder">
+        <form method="post">
         {% csrf_token %}
             {{form.as_table}}
             

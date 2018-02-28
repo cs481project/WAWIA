@@ -7,12 +7,34 @@ function myFunction(cl) {
     };
 }
 
-/*
-function myFunction(cl){
-    var x = document.getElementById(cl);
-    if (x.style.visibility === 'hidden') {
-        x.style.visibility = 'visible';
+
+var divs = ["Start", "Stop", "Close"];
+var visibleDivId = null;
+function myFunction2(divId) {
+    if (visibleDivId === divId) {
+        //visibleDivId = null;
     } else {
-        x.style.visibility = 'hidden';
+        visibleDivId = divId;
     }
-}*/
+    hideNonVisibleDivs();
+}
+function hideNonVisibleDivs() {
+    var i, divId, div;
+    for (i = 0; i < divs.length; i++) {
+        divId = divs[i];
+        div = document.getElementById(divId);
+        if (visibleDivId === divId) {
+            div.style.display = "block";
+        } else {
+            div.style.display = "none";
+        }
+    }
+}
+function myfunction3(poll) {
+    poll.startTime = datetime.now();
+    poll.save(update_fields = ['startTime']);
+}
+function myfunction4(poll) {
+    poll.stopTime = datetime.now();
+    poll.save(update_fields = ['stopTime']);
+}

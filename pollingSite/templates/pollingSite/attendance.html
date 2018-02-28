@@ -1,4 +1,4 @@
-﻿{% extends 'pollingSite/base.html' %}
+{% extends 'pollingSite/base.html' %}
 {% block content %}
 <div class="row">&nbsp;</div>
 
@@ -8,12 +8,18 @@
         <th><label style="text-align:left; font-size:x-large">Correct Answers</label></th>
         <th><label style="text-align:left; font-size:x-large">Attendance</label></th>
     </tr>
-    {% for student in students %}
+    
+    {% for item in items %}
+    
+    
     <tr>
-        <th>{{ student.name }}</th>
-        <th>{{correctAnswer|length}}/{{answers|length}}&nbsp;&nbsp;{{totalnumbers}}% </th>
-        <th>{{polllist|length}}/{{polllist2|length}}&nbsp;&nbsp;{{totalnumbers2}}%</th>
+        <th>{{item.3}}</th>
+        <th>{{item.0|length}}/{{item.1|length}}&nbsp;&nbsp;{{item.4}}% </th>
+        <th>{{item.1|length}}/{{item.2|length}}&nbsp;&nbsp;{{item.5}}%</th>
     </tr>
-    {% endfor %}
-
+    
+    
+    {%endfor%}
+    
+</table>
     {% endblock content %}

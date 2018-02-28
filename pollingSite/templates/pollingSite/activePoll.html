@@ -1,4 +1,4 @@
-﻿{% extends 'pollingSite/base.html' %}
+{% extends 'pollingSite/base.html' %}
 {% load static %}
 {% block content %}
 <label style="text-align:center"><font size="6"><b>{{ poll.name }}</b></font></label>
@@ -25,15 +25,23 @@
             <div class="two columns answers" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
             <div class="three columns answers" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
         {% endif %}
+
         </div>
         {% endfor %}
         <div class="row">
             <div class="four columns"><label><b>&nbsp;</b></label></div>
             <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:createPoll' poll.classroom.id %}"><button type="submit" style="background-color: #990000"> Close Poll </button></a></div>
             <div class="four columns"><label><b>&nbsp;</b></label></div>
-
         </div>
-    </div>
+        
+        {% endif %}
+
+
+    
+        
+
+
+</div>
     {% endblock content %}
 
 {% block JavaScrpt %}

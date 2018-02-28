@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 
-SEASONS = ((0, "Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
+SEASONS = ((0,"Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
 
 class InstructorUser(AbstractUser):
     activeClass = models.OneToOneField('Classroom', blank = True, on_delete=models.SET_NULL, null=True)
@@ -42,6 +42,7 @@ class Classroom(models.Model):
 
 class Student(models.Model):
     name = models.CharField(max_length = 128)
+    lastname = models.CharField(max_length = 128, default='smith')
     studentID = models.IntegerField(unique=True)
     phoneNumber = models.CharField(max_length = 20, null=True)
     classrooms = models.ManyToManyField(Classroom)
@@ -51,10 +52,10 @@ class Student(models.Model):
 class Poll(models.Model):
     name = models.CharField(max_length = 64)
     options = models.IntegerField()
-    correct = models.IntegerField(default=1)
+    correct = models.IntegerField(default=0)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null=True)
-    startTime = models.DateTimeField(null=True)
-    stopTime = models.DateTimeField(null=True)
+    startTime = models.DateTimeField(editable=True,null=True)
+    stopTime = models.DateTimeField(editable=True,null=True)
             
     def __str__(self):
         return self.name
