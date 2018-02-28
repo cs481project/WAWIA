@@ -1,10 +1,11 @@
 ﻿{% extends 'pollingSite/base.html' %}
 {% block content %}
+<label style="text-align:center"><font size="6"><b>Create a poll for {{ classroom.className }}</b></font></label>
 <form method="post" style="border-color:InactiveBorder">
     {% csrf_token %}
         {{form.as_table}}
 <div class="row">
-    <button type="submit" style="background-color: #990000">Add Poll</button>
+    <button type="submit" style="background-color: #990000">Run Poll</button>
 </div>
 </form>
 {% endblock content %}

@@ -8,3 +8,14 @@
     </div>
 </form>
 {% endblock content %}
+
+{% block Javascrpt %}
+<script type="text/javascript"> 
+   jQuery(function() {
+       jQuery("#id_start_date").datepicker({ dateFormat: 'yy-mm-dd' });
+   });
+$(function(){
+    $("#id_end_date").datepicker();
+  });
+</script>
+{% endblock Javascrpt%}

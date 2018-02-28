@@ -9,24 +9,27 @@
 </div>
 <div class="row">
     <div class="four columns"><label><b>&nbsp;</b></label></div>
-    <div class="four columns"><button onclick="myFunction('one column')" style="background-color: #990000"> Toggle Answers </button></div>
+    <div class="four columns"><button onclick="myFunction('answers');myFunction('titles')" style="background-color: #990000"> Toggle Answers </button></div>
     <div class="four columns"><label><b>&nbsp;</b></label></div>
 </div>
-    <div class="row">
+        <div id="answers"class="row">
+        <div class="two columns titles" style="display:none"><label style="text-align:right;font-size:x-large"><b>Option</b></label></div>
+        <div class="five columns titles" style="display:none"><label style="text-align:right;font-size:x-large"><b>Total Answers for Option</b></label></div>
+        </div>
         {% for option in options %}
-        <div id ="answers"class="row">
+        <div id ="answers" class="row">
             {% if forloop.counter == poll.correct %}
-            <div class="one column" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
-            <div class="one column" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
+            <div class="two columns answers" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="three columns answers" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
             {% else %}
-            <div class="one column" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
-            <div class="one column" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
+            <div class="two columns answers" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="three columns answers" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
         {% endif %}
         </div>
         {% endfor %}
         <div class="row">
             <div class="four columns"><label><b>&nbsp;</b></label></div>
-            <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:pollList' poll.classroom.id %}"><button type="submit" style="background-color: #990000"> Close Poll </button></a></div>
+            <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:createPoll' poll.classroom.id %}"><button type="submit" style="background-color: #990000"> Close Poll </button></a></div>
             <div class="four columns"><label><b>&nbsp;</b></label></div>
 
         </div>
