@@ -14,8 +14,6 @@ class createPollForm(forms.Form):
     choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
     new_poll_name = forms.CharField(max_length=100)
     possible_answers = forms.IntegerField()
-    #start_time = forms.DateTimeField()
-    #end_time = forms.DateTimeField()
 
 class correctAnswerForm(forms.Form):
     correct_answer = forms.IntegerField(required = True)
@@ -27,7 +25,7 @@ class attendanceFormForm(forms.Form):
 class activePollForm(forms.Form):
     start_time = forms.DateTimeField()
     end_time = forms.DateTimeField()
-
+    
 class settingForm(forms.Form):
     email = forms.CharField(max_length=50, required=False)
     first_name = forms.CharField(max_length=50, required=False)
