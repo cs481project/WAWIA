@@ -1,6 +1,6 @@
 {% extends 'pollingSite/base.html' %}
 {% block content %}
-        <form method="post" style="border-color:InactiveBorder">
+        <form method="post" style="border-color:white">
         {% csrf_token %}
             {{form.as_table}}
             

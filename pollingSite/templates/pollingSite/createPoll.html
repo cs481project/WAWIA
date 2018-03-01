@@ -2,7 +2,7 @@
 {% block content %}
 <label style="text-align:center"><font size="6"><b>Create a poll for {{ classroom.className }}</b></font></label>
 
-<form method="post">
+<form method="post"style="border-color:white">
 
     {% csrf_token %}
         {{form.as_table}}

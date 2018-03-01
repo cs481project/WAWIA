@@ -39,12 +39,28 @@ button {
 }
 
     /* Add a hover effect for buttons */
-    button:hover {
-        opacity: 0.8;
+    .button:hover,
+    button:hover,
+    input[type="submit"]:hover,
+    input[type="reset"]:hover,
+    input[type="button"]:hover,
+    .button:focus,
+    button:focus,
+    input[type="submit"]:focus,
+    input[type="reset"]:focus,
+    input[type="button"]:focus {
+        opacity: 1.0;
+        font-weight:bold;
     }
-
-/* Extra style for the cancel button (red) */
-.cancelbtn {
+.button,
+button,
+input[type="submit"],
+input[type="reset"],
+input[type="button"] {
+    font-weight:bold;
+}
+    /* Extra style for the cancel button (red) */
+    .cancelbtn {
     width: auto;
     padding: 10px 18px;
     background-color: #990000;
