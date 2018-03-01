@@ -42,10 +42,7 @@ def recieveSMS(request):
 
 def landing(request):
     if request.user.is_authenticated:
-        if request.user.activeClass == None:
-            return redirect('pollingSite:addClass')
-        else:
-            return redirect('pollingSite:index')
+        return redirect('pollingSite:index')
     else:
         return redirect('pollingSite:login')
 
@@ -164,7 +161,9 @@ def addClass(request):
                 end_date=form.cleaned_data['end_date'],
                 instructor=request.user)
             if request.user.activeClass == None:
-                return redirect('pollingSite:setActive', classroom.id)
+                request.user.activeClass = classroom
+                request.user.save()
+                return redirect('pollingSite:createPoll', classroom.id)
             else:
                 return redirect('pollingSite:index');
     else:
@@ -177,6 +176,18 @@ def classroom(request, classroom):
     polls = Poll.objects.filter(classroom=classroom)
     curClass = classroom
     return render(request, 'pollingSite/pollList.html', locals())
+
+@login_required
+def pollLanding(request):
+    if request.user.activeClass == None:
+        return redirect('pollingSite:addClass')
+    else:
+        return redirect('pollingSite:createPoll', request.user.activeClass.id)
+
+@login_required
+def info(request, classroom):
+    classroom = Classroom.objects.get(id=classroom)
+    return render(request, 'pollingSite/info.html', locals())
 
 @login_required
 @classroomSecureWrapper

@@ -2,10 +2,16 @@
 
 {% block content %}
 <div class="row">
-    <div class="eleven columns">&nbsp;</div>
-    <div class="one column"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:addClass' %}"><button type="submit" style="background-color: #990000">+</button></a></div>
+    &nbsp;
 </div>
-{% for class in classroom %}
+<div class="row">
+    &nbsp;
+</div>
+<div class="row">
+    <div class="eight columns">&nbsp;</div>
+    <div class="two columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:settings' %}"><button type="submit" style="background-color: #990000">Settings</button></a></div>
+    <div class="two columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:addClass' %}"><button type="submit" style="background-color: #990000">Add Class</button></a></div>
+    {% for class in classroom %}
     {% ifchanged class.quarter or class.year %}
     <div class="row">
         <br/>
@@ -16,10 +22,10 @@
     </div>
     <div class="row">
     <div class="two columns"><u>Active Class</u></div>
-    <div class="four columns">
+    <div class="three columns">
         <font size="3"><u>Class Name</u></font>
     </div>
-    <div class="six columns">
+    <div class="seven columns">
         <font size="3">
         <u>Students register by texting to 509-303-4655</u>
         </font>
@@ -31,19 +37,24 @@
     {% else %}
     <div class="row">
     {% endif %}
+    {% if class.isActive %}
     {% if request.user.activeClass == class %}
     <div class="two columns"><a href="{% url 'pollingSite:setActive' class.id %}"><input type="radio" checked style="margin-left:50%"></input></a></div>
     {% else %}
     <div class="two columns"><a href="{% url 'pollingSite:setActive' class.id %}"><input type="radio" style="margin-left:50%"></input></a></div>
     {% endif %}
-    <div class="four columns">
+    {% else %}
+    <div class="two columns">&nbsp;</div>
+    {% endif %}
+    <div class="three columns">
         <font size="3">{{ class.className }}</font>
     </div>
-    <div class="six columns">
+    <div class="seven columns">
         <font size="3">
-            Text: <font style="color:#990000" >FirstName, LastName, ID, {{class.classKey}}</font> to register
+            Text: <font style="color:#990000" >Reg FirstName LastName ID {{class.classKey}}</font> to register <a href="{% url 'pollingSite:info' class.id %}">Info</a>
         </font>
     </div>
 </div>
 {% endfor %}
+</div>
 {% endblock content%}

@@ -43,6 +43,12 @@ class Classroom(models.Model):
                                 )
             newPoll.save()
 
+    def isActive(self):
+        if datetime.now().date() > self.end_date or datetime.now().date() < self.start_date:
+            return False
+        else:
+            return True
+
 class Student(models.Model):
     name = models.CharField(max_length = 128)
     lastname = models.CharField(max_length = 128, default='smith')
