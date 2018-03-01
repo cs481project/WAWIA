@@ -146,7 +146,7 @@ def report(request):
             enumerated_items = enumerate(items)
         return render(request, 'pollingSite/report.html', locals())
     else:
-        form = reportForm()
+        form = reportForm(initial={'choose_class': request.user.activeClass})
         return render(request, 'pollingSite/report.html', locals())
 
 @login_required

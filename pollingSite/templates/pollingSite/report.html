@@ -1,7 +1,8 @@
 ﻿{% extends 'pollingSite/base.html' %}
 {% block content %}
+<label style="text-align:center"><font size="6"><b>Attendance Report</b></font></label>
 <div class="row">&nbsp;</div>
-<form method="post">
+<form method="post" style="border-color:white">
     {% csrf_token %}
     {{form.as_table}}
     <div class="row">

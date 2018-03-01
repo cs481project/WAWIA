@@ -10,9 +10,9 @@
         <div class="three columns"><a href="{% url 'pollingSite:createPoll' request.user.activeClass.id %}"><button type="submit">Poll</button></a></div>
     {% endif %}
     {% if 'report/' in request.path %}
-        <div class="three columns"><a href="{% url 'pollingSite:attendanceForm' request.user.activeClass.id %}"><button type="submit"style="background-color: #990000">Report</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:report' %}"><button type="submit"style="background-color: #990000">Report</button></a></div>
     {% else %}
-        <div class="three columns"><a href="{% url 'pollingSite:attendanceForm' request.user.activeClass.id %}"><button type="submit">Report</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:report' %}"><button type="submit">Report</button></a></div>
     {% endif %}
         <div class="three columns"><a href="{% url 'pollingSite:logout' %}"><button type="submit">Log Out</button></a></div>
 </div>

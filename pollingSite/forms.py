@@ -17,7 +17,6 @@ class copyClassForm(forms.Form):
 class createPollForm(forms.Form):
     possible_answers = forms.ChoiceField(choices=[(i,i) for i in range(2,13)], label="# of options for this poll")
     choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
-    new_poll_name = forms.CharField(max_length=100)
 
 class correctAnswerForm(forms.Form):
     correct_answer = forms.IntegerField(required = True)
@@ -37,5 +36,5 @@ class settingForm(forms.Form):
 
 class reportForm(forms.Form):
     choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
-    start_date = forms.DateField()
-    end_date = forms.DateField()
+    start_date = forms.DateField(widget=forms.SelectDateWidget)
+    end_date = forms.DateField(widget=forms.SelectDateWidget)
