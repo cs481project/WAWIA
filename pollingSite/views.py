@@ -42,7 +42,10 @@ def recieveSMS(request):
 
 def landing(request):
     if request.user.is_authenticated:
-        return redirect('pollingSite:index')
+        if request.user.activeClass == None:
+            return redirect('pollingSite:addClass')
+        else:
+            return redirect('pollingSite:index')
     else:
         return redirect('pollingSite:login')
 
@@ -154,11 +157,16 @@ def addClass(request):
     if request.method == 'POST':
         form = createClassForm(request.POST)
         if form.is_valid():
-            Classroom.objects.create(className=form.cleaned_data['class_name'],
+            classroom = Classroom.objects.create(className=form.cleaned_data['class_name'],
                 quarter = form.cleaned_data['quarter'],
                 year=form.cleaned_data['year'],
+                start_date=form.cleaned_data['start_date'],
+                end_date=form.cleaned_data['end_date'],
                 instructor=request.user)
-            return redirect('pollingSite:index');
+            if request.user.activeClass == None:
+                return redirect('pollingSite:setActive', classroom.id)
+            else:
+                return redirect('pollingSite:index');
     else:
         form = createClassForm()
         return render(request, 'pollingSite/addClass.html', locals())
@@ -186,6 +194,8 @@ def createPoll(request, classroom):
         if form.is_valid():
             newPoll = Poll.objects.create(classroom = Classroom.objects.get(pk=classroom), name="", options=form.cleaned_data['possible_answers'], startTime = datetime.now(), stopTime = datetime.now())
             return redirect('pollingSite:activePoll', curClass1, newPoll.id)
+    elif classroom is 'None':
+        return redirect('pollingSite:addClass')
     else:
         classroom = Classroom.objects.get(pk=classroom)
         form = createPollForm()

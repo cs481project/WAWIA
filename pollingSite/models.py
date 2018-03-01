@@ -16,6 +16,9 @@ class Classroom(models.Model):
     quarter = models.IntegerField(choices=SEASONS)
     year = models.IntegerField(choices=[(i,i) for i in range(2018, datetime.now().year + 1)])
     instructor = models.ForeignKey(InstructorUser, on_delete=models.SET_NULL, null=True) #change on_delete
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+
     def __str__(self):
         return self.className
     def __init__(self, *args, **kwargs):

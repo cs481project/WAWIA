@@ -1,5 +1,5 @@
 {% extends 'pollingSite/base.html' %}
-{% load static %}
+{% load static pollingSite_tags %}
 {% block content %}
 <label style="text-align:center"><font size="6"><b>Polling in {{ request.user.activeClass }}</b></font></label>
 <div class="row">
@@ -23,10 +23,10 @@
         {% for option in options %}
         <div id="answers" class="row">
             {% if forloop.counter == poll.correct %}
-            <div class="two columns answer" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="two columns answer" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
             <div class="four columns answer" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
             {% else %}
-            <div class="two columns answer" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="two columns answer" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
             <div class="four columns answer" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
             {% endif %}
         </div>
@@ -52,10 +52,10 @@
         {% for option in options %}
         <div id="answers" class="row">
             {% if forloop.counter == poll.correct %}
-            <div class="one column"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="one column"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
             <div class="one column"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
             {% else %}
-            <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
+            <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
             <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
             {% endif %}
         </div>

@@ -8,6 +8,8 @@ class createClassForm(forms.Form):
     class_name = forms.CharField(max_length=50)
     quarter = forms.ChoiceField(choices=SEASONS)
     year = forms.ChoiceField(choices=[(i,i) for i in range(2018, datetime.now().year + 2)])
+    start_date = forms.DateField(widget=forms.SelectDateWidget)
+    end_date = forms.DateField(widget=forms.SelectDateWidget)
 
 class copyClassForm(forms.Form):
     class_name = forms.CharField(max_length=50)
