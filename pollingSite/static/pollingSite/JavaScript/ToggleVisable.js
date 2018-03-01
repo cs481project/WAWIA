@@ -7,7 +7,7 @@ function myFunction(cl) {
     };
 }
 
-var divs = ["Start", "Stop", "Close"];
+var divs = ["Stop", "Close"];
 var visibleDivId = null;
 function myFunction2(divId) {
     if (visibleDivId === divId) {

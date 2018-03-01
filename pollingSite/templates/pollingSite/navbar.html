@@ -1,16 +1,16 @@
 <div class="row">
     {% if 'index/' in request.path %}
-        <div class="three columns"><a href="{% url 'pollingSite:index' %}"><button type="submit" style="background-color: #990000">Home</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:index' %}"><button type="submit" style="background-color: #990000"><b>Home</b></button></a></div>
     {% else %}
-        <div class="three columns"><a href="{% url 'pollingSite:index' %}"><button type="submit">Home</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:index' %}"><button type="submit"><b>Home</b></button></a></div>
     {% endif %}
     {% if 'polladmin/' in request.path %}
-        <div class="three columns"><a href="{% url 'pollingSite:pollAdmin' %}"><button type="submit" style="background-color: #990000">Poll Admin</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:pollAdmin' %}"><button type="submit" style="background-color: #990000"><b>Poll Admin</b></button></a></div>
     {% else %}
-        <div class="three columns"><a href="{% url 'pollingSite:pollAdmin' %}"><button type="submit">Poll Admin</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:pollAdmin' %}"><button type="submit"><b>Poll Admin</b></button></a></div>
     {% endif %}
     {% if 'settings/' in request.path %}
-        <div class="three columns"><a href="{% url 'pollingSite:settings' %}"><button type="submit"style="background-color: #990000">Settings</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:settings' %}"><button type="submit"style="background-color: #990000"><b>Settings</b></button></a></div>
     {% else %}
         <div class="three columns"><a href="{% url 'pollingSite:settings' %}"><button type="submit">Settings</button></a></div>
     {% endif %}

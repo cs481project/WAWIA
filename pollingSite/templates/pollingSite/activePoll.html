@@ -14,7 +14,7 @@
         {% if poll.correct == 0 %}
         <div class="row">
             <div class="four columns"><label><b>&nbsp;</b></label></div>
-            <div class="four columns"><button onclick="myFunction('one column')" style="background-color: #990000"> Toggle Answers </button></div>
+            <div class="four columns"><button onclick="myFunction('one column')" style="background-color: #990000"> <b>Toggle Answers </b></button></div>
             <div class="four columns"><label><b>&nbsp;</b></label></div>
         </div>
         {% for option in options %}
@@ -30,12 +30,12 @@
         {% endfor %}
         <form method="post">
             
-            <div class="row" id="Stop" style="display:block">
+            <div class="row whatever" id="Stop" style="display:block">
                 <div class="four columns"><label><b>&nbsp;</b></label></div>
-                <div class="four columns"><button type="button" onclick="myFunction2('Close'); myfunction4(poll);" style="background-color: #990000"> Close Poll </button></div>
+                <div class="four columns"><button type="button" onclick="myFunction('whatever'); myfunction4(poll);" style="background-color: #990000"> Close Poll </button></div>
                 <div class="four columns"><label><b>&nbsp;</b></label></div>
             </div>
-            <div class="row" id="Close" style="display:none">
+            <div class="row whatever" id="Close" style="display:none">
                 {% csrf_token %}
                 {{form.as_table}}
                 <div class="row">
