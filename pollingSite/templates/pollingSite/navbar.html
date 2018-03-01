@@ -5,9 +5,9 @@
         <div class="three columns"><a href="{% url 'pollingSite:index' %}"><button type="submit">Home</button></a></div>
     {% endif %}
     {% if 'poll/' in request.path %}
-        <div class="three columns"><a href="{% url 'pollingSite:createPoll' request.user.activeClass.id %}"><button type="submit" style="background-color: #990000">Poll</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:createPoll' request.user.activeClass %}"><button type="submit" style="background-color: #990000">Poll</button></a></div>
     {% else %}
-        <div class="three columns"><a href="{% url 'pollingSite:createPoll' request.user.activeClass.id %}"><button type="submit">Poll</button></a></div>
+        <div class="three columns"><a href="{% url 'pollingSite:createPoll' request.user.activeClass %}"><button type="submit">Poll</button></a></div>
     {% endif %}
     {% if 'report/' in request.path %}
         <div class="three columns"><a href="{% url 'pollingSite:report' %}"><button type="submit"style="background-color: #990000">Report</button></a></div>
