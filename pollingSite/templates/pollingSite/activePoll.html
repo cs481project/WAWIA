@@ -63,13 +63,13 @@
         {% endfor %}
         <div class="row">
             <div class="four columns"><label><b>&nbsp;</b></label></div>
-            <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:pollList' poll.classroom.id %}"><button type="button" style="background-color: #990000"> Run New Poll=].button></a></div>
+            <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:createPoll' classroom %}"><button type="button" style="background-color: #990000"> Run New Poll</button></a></div>
             <div class="four columns"><label><b>&nbsp;</b></label></div>
         </div>
         
         {% endif %}
 
-</div>
+
     {% endblock content %}
 
 {% block JavaScrpt %}

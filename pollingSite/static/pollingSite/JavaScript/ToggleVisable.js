@@ -30,11 +30,3 @@ function hideNonVisibleDivs() {
         }
     }
 }
-function myfunction3(poll) {
-    poll.startTime = datetime.now();
-    poll.save(update_fields = ['startTime']);
-}
-function myfunction4(poll) {
-    poll.stopTime = datetime.now();
-    poll.save(update_fields = ['stopTime']);
-}
