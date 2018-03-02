@@ -49,11 +49,12 @@
     <div class="three columns">
         <font size="3">{{ class.className }}</font>
     </div>
-    <div class="seven columns">
+    <div class="six columns">
         <font size="3">
-            Text: <font style="color:#990000" >Reg FirstName LastName ID {{class.classKey}}</font> to register <a href="{% url 'pollingSite:info' class.id %}">Info</a>
+            Text: <font style="color:#990000" >Reg FirstName LastName ID {{class.classKey}}</font> to register 
         </font>
     </div>
+        <div class="one column"><a href="{% url 'pollingSite:info' class.id %}">Info</a></div>
 </div>
 {% endfor %}
 </div>
