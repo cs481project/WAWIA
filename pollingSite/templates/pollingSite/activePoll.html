@@ -2,6 +2,7 @@
 {% load static pollingSite_tags %}
 {% block content %}
 <label style="text-align:center"><font size="6"><b>Polling in {{ request.user.activeClass }}</b></font></label>
+<label style="text-align:center"><font size="5" style="color:#990000"><b>Text: 509-303-4655</b></font></label>
 <div class="row">
     <div class="two columns"><label style="text-align:right; font-size:xx-large"><b>&nbsp;</b></label></div>
     <div class="five columns"><label style="text-align:right; font-size:xx-large"><b>Total Submissions:</b></label></div>
@@ -35,7 +36,7 @@
             
             <div class="row fin" id="Stop" style="display:block">
                 <div class="four columns"><label><b>&nbsp;</b></label></div>
-                <div class="four columns"><button type="button" onclick="myFunction('fin');" style="background-color: #990000"> Close Poll </button></div>
+                <div class="four columns"><button type="submit" onclick="myFunction('fin');" style="background-color: #990000"> Close Poll </button></div>
                 <div class="four columns"><label><b>&nbsp;</b></label></div>
             </div>
             <div class="row fin" id="Close" style="display:none">

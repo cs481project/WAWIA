@@ -18,6 +18,8 @@ class Classroom(models.Model):
     instructor = models.ForeignKey(InstructorUser, on_delete=models.SET_NULL, null=True) #change on_delete
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
+    start_time = models.TimeField(null=True)
+    end_time = models.TimeField(null=True)
 
     def __str__(self):
         return self.className

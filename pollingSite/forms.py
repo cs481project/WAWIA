@@ -10,6 +10,8 @@ class createClassForm(forms.Form):
     year = forms.ChoiceField(choices=[(i,i) for i in range(2018, datetime.now().year + 2)])
     start_date = forms.DateField(widget=forms.SelectDateWidget)
     end_date = forms.DateField(widget=forms.SelectDateWidget)
+    start_time = forms.TimeField(widget=forms.TimeInput)
+    end_time = forms.TimeField(widget=forms.TimeInput)
 
 class copyClassForm(forms.Form):
     class_name = forms.CharField(max_length=50)
@@ -21,7 +23,11 @@ class createPollForm(forms.Form):
     choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
 
 class correctAnswerForm(forms.Form):
-    correct_answer = forms.IntegerField(required = True)
+    correct_answer = forms.ChoiceField(choices=[(i,i) for i in range(2,3)])
+    def __init__(self, choices, *args, **kwargs):
+        super(correctAnswerForm, self).__init__()
+        if choices != None:
+            self.fields['correct_answer'].choices=[(chr(64+i),i) for i in range(1,choices+1)]
 
 class attendanceFormForm(forms.Form):
     start_date = forms.DateField(widget=forms.SelectDateWidget)
