@@ -204,12 +204,14 @@ def createPoll(request, classroom):
         form = createPollForm(request.POST)
         if form.is_valid():
             newPoll = Poll.objects.create(classroom = Classroom.objects.get(pk=classroom), name="", options=form.cleaned_data['possible_answers'], startTime = datetime.now(), stopTime = datetime.now())
+            newPoll.startTime = datetime.now()
+            newPoll.save()
             return redirect('pollingSite:activePoll', curClass1, newPoll.id)
     elif classroom is 'None':
         return redirect('pollingSite:addClass')
     else:
         classroom = Classroom.objects.get(pk=classroom)
-        form = createPollForm()
+        form = createPollForm(initial={'choose_class': request.user.activeClass})
         return render(request, 'pollingSite/createPoll.html', locals())
 
 @login_required
@@ -223,11 +225,14 @@ def activePoll(request, poll, classroom):
         options.append(next)
         totalSub += next
     if request.method == 'POST':
-        form = correctAnswerForm(request.POST)
+        form = correctAnswerForm(request.POST, poll.options)
         if form.is_valid():
             poll.correct= form.cleaned_data['correct_answer']
             poll.save(update_fields=['correct'])
             return render(request, 'pollingSite/activePoll.html', locals())
+        else:
+            poll.stopTime = datetime.now()
+            poll.save()
     else:
-        form = correctAnswerForm()        
+        form = correctAnswerForm(poll.options)        
         return render(request, 'pollingSite/activePoll.html', locals())
