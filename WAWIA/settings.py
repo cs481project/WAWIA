@@ -31,7 +31,8 @@ ALLOWED_HOSTS = ['127.0.0.1','71.80.192.118']
 # Application definition
 
 INSTALLED_APPS = [
-    'pollingSite.apps.PollingsiteConfig',
+    #'pollingSite.apps.PollingsiteConfig',
+    'pollingSite',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -117,7 +118,7 @@ PASSWORD_HASHERS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'US/Pacific'
 
 USE_I18N = True
 

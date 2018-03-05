@@ -6,12 +6,34 @@ from datetime import datetime
 
 SEASONS = ((0, "Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
 
+class Student(models.Model):
+    name = models.CharField(max_length = 128)
+    studentID = models.IntegerField(unique=True)
+    phoneNumber = models.CharField(max_length = 20, null=True)
+    #classrooms = models.ManyToManyField(Classroom)
+    def __str__(self):
+        return self.name
+
+
 class Classroom(models.Model):
     classNumber = models.CharField(max_length = 20, default="")
     className = models.CharField(max_length = 64, default=classNumber)
     classKey = models.CharField(max_length = 6, unique=True)
+
+    students = models.ManyToManyField(Student)
+
+    class Meta:
+        ordering = ('className',)
+
     quarter = models.IntegerField(choices=SEASONS)
     year = models.IntegerField(choices=[(i,i) for i in range(2018, datetime.now().year + 1)])
+
+    StartDate = models.DateTimeField(null=True)
+    EndDate = models.DateTimeField(null=True)
+
+    StartTime = models.TimeField(null=True)
+    EndTime = models.TimeField(null=True)
+
     instructor = models.ForeignKey(User, on_delete=models.CASCADE) #change on_delete
     def __str__(self):
         return self.className
@@ -25,7 +47,7 @@ class Classroom(models.Model):
         dupe = Classroom.objects.create(instructor = user,
                                         className=self.className+' copy',
                                         classNumber=self.classNumber,
-                                        quarter=quarter, 
+                                        quarter=quarter,
                                         year=year)
         dupe.save()
         for poll in Poll.objects.filter(classroom=self):
@@ -37,13 +59,7 @@ class Classroom(models.Model):
                                 )
             newPoll.save()
 
-class Student(models.Model):
-    name = models.CharField(max_length = 128)
-    studentID = models.IntegerField(unique=True)
-    phoneNumber = models.CharField(max_length = 20, null=True)
-    classrooms = models.ManyToManyField(Classroom)
-    def __str__(self):
-        return self.name
+
 
 class Poll(models.Model):
     name = models.CharField(max_length = 64)
@@ -52,15 +68,24 @@ class Poll(models.Model):
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null=True)
     startTime = models.DateTimeField(null=True)
     stopTime = models.DateTimeField(null=True)
-            
+    isPollActive = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name
-		
-    def isActive(self):
-        if(self.startTime < datetime.now()):
-            if(self.stopTime is not null or (self.stopTime > datetime.now())):
-                return True
-        return False
+
+    #def isActive(self):
+    #    stTime = datetime.now()
+    #    stTime = stTime.replace(hour=(self.startTime.hour), minute=(self.startTime.minute))
+    #    print(stTime)
+    #    enTime = datetime.now()
+    #    enTime = enTime.replace(hour=(self.stopTime.hour), minute=(self.stopTime.minute))
+    #    print(enTime)
+    #
+    #    if(stTime < datetime.now()):
+    #        if(enTime > datetime.now()):
+    #            return True
+    #    return False
+
 
 class Answer(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
