@@ -23,11 +23,12 @@ class createPollForm(forms.Form):
     choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
 
 class correctAnswerForm(forms.Form):
-    correct_answer = forms.ChoiceField(choices=[(i,i) for i in range(2,3)])
-    def __init__(self, choices, *args, **kwargs):
+    correct_answer = forms.ChoiceField()
+    def __init__(self, *args, **kwargs):
         super(correctAnswerForm, self).__init__()
-        if choices != None:
-            self.fields['correct_answer'].choices=[(chr(64+i),i) for i in range(1,choices+1)]
+        if 'choices' in kwargs:
+            choices = kwargs.pop('choices')
+            self.fields['correct_answer'].choices=forms.ChoiceField([(i,chr(64+i)) for i in range(1,choices+1)])
 
 class attendanceFormForm(forms.Form):
     start_date = forms.DateField(widget=forms.SelectDateWidget)
