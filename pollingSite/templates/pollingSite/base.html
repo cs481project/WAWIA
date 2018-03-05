@@ -6,6 +6,9 @@
     <link rel="stylesheet" href="{% static 'pollingSite/css/skeleton.css' %}">
     <link rel="stylesheet" href="{% static 'pollingSite/css/normalize.css' %}">
     <link rel="stylesheet" href="{% static 'pollingSite/css/WAWIA.css' %}">
+    <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/redmond/jquery-ui.css" rel="Stylesheet" />
+    <script language="javascript" type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script> 
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/jquery-ui.min.js"></script> 
     {% block css %}{% endblock css %}
     
     <meta charset="utf-8" />
@@ -13,7 +16,7 @@
 </head>
 {% block body %}
 <body>
-    <div class="container" >
+    <div class="container">
 
         <!-- columns should be the immediate child of a .row -->
         {% block navbar %}{% include 'pollingSite/navbar.html' %}{% endblock navbar %}
@@ -22,5 +25,4 @@
     {% block JavaScrpt %}{% endblock JavaScrpt %}
 </body>
 {% endblock body %}
-
 </html>

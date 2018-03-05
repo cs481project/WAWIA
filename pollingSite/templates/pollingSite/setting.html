@@ -1,7 +1,10 @@
 {% extends 'pollingSite/base.html' %}
 {% block content %}
 <label style="text-align:center"><font size="6"><b>User Settings</b></font></label>
-        <form method="post" style="border-color:InactiveBorder">
+{% if message is not None %}
+<label style="text-align:center"><font style="color:#990000" size="4"><b>{{message}}</b></font></label>
+{% endif %}
+        <form method="post" style="border-color:white">
         {% csrf_token %}
             {{form.as_table}}
             
@@ -13,6 +16,4 @@
             </div>
         </form>
         <div class="twelve columns"><label><b>&nbsp;</b></label></div>
-         <iframe width='100%' frameborder="0" height='600'src="{% url 'pollingSite:changePassword' %}"></iframe> 
-
 {% endblock content %}

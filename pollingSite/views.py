@@ -1,5 +1,7 @@
 import uuid
 import itertools
+import operator
+
 from datetime import datetime, timedelta,date
 from django import template
 from django.shortcuts import render, redirect
@@ -203,27 +205,19 @@ def landing(request):
 
 @login_required
 def index(request):
-    first_name = ""
-    last_name = ""
-    username = ""
-    if request.user.first_name == "":
-        if request.user.last_name == "":
-            username = request.user.get_username()
-            return render(request, 'pollingSite/index.html',locals())
-        else:
-            last_name = request.user.last_name
-            return render(request, 'pollingSite/index.html',locals())
-    else:
-        first_name = request.user.first_name
-        if request.user.last_name == "":
-            return render(request, 'pollingSite/index.html',locals())
-        else:
-            last_name = request.user.last_name
-            return render(request, 'pollingSite/index.html',locals())
+    classroom = Classroom.objects.filter(instructor=request.user).order_by("-year", "-quarter")
+    return render(request, 'pollingSite/index.html', locals())
 
 @login_required
 def pollAdmin(request):
     return addSearchClass(request)
+
+@login_required
+def setActive(request, classroom):
+    classroom = Classroom.objects.get(pk=classroom)
+    request.user.activeClass = classroom
+    request.user.save()
+    return redirect('pollingSite:index')
 
 @login_required
 def addSearchClass(request):
@@ -231,13 +225,20 @@ def addSearchClass(request):
     return render(request, 'pollingSite/addSearchClass.html', locals())
 
 @login_required
-def copy(request, classroom):
+def copyClass(request, classroom):
     classroom = Classroom.objects.get(pk=classroom)
-    classroom.duplicate(request.user, classroom.quarter, classroom.year)
-    return redirect('pollingSite:pollAdmin')
+    if request.method == 'POST':
+        form = copyClassForm(request.POST)
+        if form.is_valid():
+            classroom.duplicate(request.user, form.cleaned_data['class_name'], form.cleaned_data['quarter'], form.cleaned_data['year'])
+            return redirect('pollingSite:pollAdmin')
+    else:
+        form = copyClassForm(initial={'class_name':classroom.className, 'quarter':classroom.quarter, 'year':classroom.year})
+        return render(request, 'pollingSite/copyClass.html', locals())
 
 @login_required
 def settings(request):
+    message = None
     email = request.user.email
     first_name = request.user.first_name
     last_name = request.user.last_name
@@ -249,7 +250,8 @@ def settings(request):
             user.first_name = form.cleaned_data['first_name']
             user.last_name = form.cleaned_data['last_name']
             user.save()
-            return HttpResponse('Changed Email')
+            message = "Changed Personal Settings"
+            return render(request, 'pollingSite/setting.html', locals())
     else:
         form = settingForm(initial={'email':email, 'first_name':first_name, 'last_name':last_name})
         return render(request, 'pollingSite/setting.html', locals())
@@ -260,19 +262,67 @@ def search(request):
 
 @login_required
 def report(request):
-    return HttpResponse('Report')
+    students = []
+    w = 7
+    items = []
+    if request.method == 'POST':
+        form = reportForm(request.POST)
+        if form.is_valid():
+            start_t = form.cleaned_data['start_date']
+            end_t = form.cleaned_data['end_date']
+            curClass=form.cleaned_data['choose_class']
+            students = Student.objects.filter(classrooms=curClass)
+            students = sorted(students, key=operator.attrgetter('lastname'))
+            print(curClass)
+            for student1 in students:
+                correctAnswer = []
+                answers = []
+                polllist = []
+                totalnumbers = 0.0
+                totalnumbers2 = 0.0
+                answers = Answer.objects.filter(student=student1)
+                polls = Poll.objects.filter(classroom=curClass)
+                print(answers)
+                for poll in polls: 
+                    answerstopolls = [] 
+                    if poll.startTime.date() >= start_t and poll.stopTime.date() <= end_t:
+                        polllist.append(poll) 
+                        for answer in answers:
+                            print(start_t)
+                            print(answer.timestamp.date())
+                            print(end_t)
+                            if answer.timestamp.date() >= start_t and answer.timestamp.date() <= end_t+ timedelta(days=1) and curClass == answer.poll.classroom:
+                                answerstopolls.append(answer)
+                            if poll.startTime <= answer.timestamp and answer.timestamp <= poll.stopTime and answer.value == poll.correct and student1.name==answer.student.name:
+                                correctAnswer.append(answer)
+                        if(len(answerstopolls)!=0):
+                            totalnumbers=((len(correctAnswer)/len(answerstopolls))*100)
+                        if(len(polllist)!=0):
+                            totalnumbers2=((len(answerstopolls)/len(polllist))*100)
+                items += list(itertools.zip_longest([correctAnswer],[answerstopolls],[polllist],[student1],[totalnumbers],[totalnumbers2],fillvalue='-'))
+            enumerated_items = enumerate(items)
+        return render(request, 'pollingSite/report.html', locals())
+    else:
+        form = reportForm(initial={'choose_class': request.user.activeClass})
+        return render(request, 'pollingSite/report.html', locals())
 
 @login_required
 def addClass(request):
     if request.method == 'POST':
         form = createClassForm(request.POST)
         if form.is_valid():
-            Classroom.objects.create(className=form.cleaned_data['class_name'],
-                classNumber=form.cleaned_data['class_id'],
+            classroom = Classroom.objects.create(className=form.cleaned_data['class_name'],
                 quarter = form.cleaned_data['quarter'],
                 year=form.cleaned_data['year'],
+                start_date=form.cleaned_data['start_date'],
+                end_date=form.cleaned_data['end_date'],
                 instructor=request.user)
-            return redirect('pollingSite:pollAdmin');
+            if request.user.activeClass == None:
+                request.user.activeClass = classroom
+                request.user.save()
+                return redirect('pollingSite:createPoll', classroom.id)
+            else:
+                return redirect('pollingSite:index');
     else:
         form = createClassForm()
         return render(request, 'pollingSite/addClass.html', locals())
@@ -285,57 +335,17 @@ def classroom(request, classroom):
     return render(request, 'pollingSite/pollList.html', locals())
 
 @login_required
-@classroomSecureWrapper
-def attendance(request, classroom):
-    return render(request, 'pollingSite/attendance.html', locals())
+def pollLanding(request):
+    if request.user.activeClass == None:
+        return redirect('pollingSite:addClass')
+    else:
+        return redirect('pollingSite:createPoll', request.user.activeClass.id)
 
 @login_required
 @classroomSecureWrapper
-def attendanceForm(request, classroom):
-    curClass=classroom
-
-    totalnumbers = 0
-    totalnumbers2 = 0
-
-
-    students = []
-    polllist = []
-    polllist2 = []
-    polls = Poll.objects.filter(classroom=curClass)
-    if request.method == 'POST':
-        form = attendanceFormForm(request.POST)
-        if form.is_valid():
-            start_t = form.cleaned_data['start_date']
-            end_t = form.cleaned_data['end_date']
-            students = Student.objects.filter(classrooms=curClass)
-            for student1 in students:
-
-                answers = []
-                answers = Answer.objects.filter(student=student1,timestamp__gte=start_t, timestamp__lt=end_t + timedelta(days=1))
-                for answer in answers:
-                    if answer.timestamp.date() >= start_t and answer.timestamp.date() <= end_t:
-                        polllist.append(answer)
-                    for poll in polls:
-                        correctAnswer = []
-                        if poll.stopTime.date() >= start_t and poll.stopTime.date() <= end_t:
-                            polllist2.append(poll)
-                        if poll.startTime < answer.timestamp < poll.stopTime and answer.value == poll.correct:
-                            correctAnswer.append(answer)
-                        for a in range(len(polllist)):
-                            for b in range(a+1, len(polllist)):
-                                if (polllist[a].timestamp.date() == polllist[b].timestamp.date()):
-                                    del polllist[a]
-
-                        for c in range(len(polllist2)):
-                            for d in range(c+1, len(polllist2)):
-                                if (polllist2[c].stopTime.date()== polllist2[d].stopTime.date()):
-                                    del polllist2[c]
-            totalnumbers=(len(correctAnswer)/len(answers))*100
-            totalnumbers2=(len(polllist)/len(polllist2))*100
-            return render(request, 'pollingSite/attendance.html', locals())
-    else:
-        form = attendanceFormForm()
-        return render(request, 'pollingSite/attendanceForm.html', locals())
+def info(request, classroom):
+    classroom = Classroom.objects.get(id=classroom)
+    return render(request, 'pollingSite/info.html', locals())
 
 @login_required
 @classroomSecureWrapper
@@ -351,10 +361,15 @@ def createPoll(request, classroom):
     if request.method == 'POST':
         form = createPollForm(request.POST)
         if form.is_valid():
-            Poll.objects.create(classroom = Classroom.objects.get(pk=classroom), name=form.cleaned_data['new_poll_name'], options=form.cleaned_data['possible_answers'], correct=form.cleaned_data['correct_answer'], startTime = datetime.now(), stopTime = datetime.now())
-            return redirect('pollingSite:pollList', curClass1)
+            newPoll = Poll.objects.create(classroom = Classroom.objects.get(pk=classroom), name="", options=form.cleaned_data['possible_answers'], startTime = datetime.now(), stopTime = datetime.now())
+            newPoll.startTime = datetime.now()
+            newPoll.save()
+            return redirect('pollingSite:activePoll', curClass1, newPoll.id)
+    elif classroom is 'None':
+        return redirect('pollingSite:addClass')
     else:
-        form = createPollForm()
+        classroom = Classroom.objects.get(pk=classroom)
+        form = createPollForm(initial={'choose_class': request.user.activeClass})
         return render(request, 'pollingSite/createPoll.html', locals())
 
 @login_required
@@ -367,5 +382,16 @@ def activePoll(request, poll, classroom):
         next = Answer.objects.filter(poll=poll, value=option).count()
         options.append(next)
         totalSub += next
-
-    return render(request, 'pollingSite/activePoll.html', locals())
+    if request.method == 'POST':
+        form = correctAnswerForm(request.POST, poll.options)
+        if form.is_valid():
+            poll.correct = form.cleaned_data['correct_answer']
+            poll.save(update_fields=['correct'])
+            return render(request, 'pollingSite/activePoll.html', locals())
+        else:
+            poll.stopTime = datetime.now()
+            poll.save()
+            return HttpResponse(status=100)
+    else:
+        form = correctAnswerForm(poll.options)        
+        return render(request, 'pollingSite/activePoll.html', locals())

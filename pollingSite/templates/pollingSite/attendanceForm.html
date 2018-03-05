@@ -1,6 +1,6 @@
-﻿{% extends 'pollingSite/base.html' %}
+{% extends 'pollingSite/base.html' %}
 {% block content %}
-<form method="post" style="border-color:InactiveBorder">
+<form method="post"style="border-color:white">
     {% csrf_token %}
         {{form.as_table}}
     <div class="row">
@@ -8,3 +8,14 @@
     </div>
 </form>
 {% endblock content %}
+
+{% block Javascrpt %}
+<script type="text/javascript"> 
+   jQuery(function() {
+       jQuery("#id_start_date").datepicker({ dateFormat: 'yy-mm-dd' });
+   });
+$(function(){
+    $("#id_end_date").datepicker();
+  });
+</script>
+{% endblock Javascrpt%}

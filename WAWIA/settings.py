@@ -31,15 +31,13 @@ ALLOWED_HOSTS = ['127.0.0.1','71.80.192.118']
 # Application definition
 
 INSTALLED_APPS = [
-    #'pollingSite.apps.PollingsiteConfig',
-    'pollingSite',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'pollingSite.apps.PollingsiteConfig',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +124,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-
+AUTH_USER_MODEL = 'pollingSite.InstructorUser'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 

@@ -1,16 +1,18 @@
 from string import ascii_uppercase, digits
 from random import choices
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 
-SEASONS = ((0, "Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
+SEASONS = ((0,"Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
+
+class InstructorUser(AbstractUser):
+    activeClass = models.OneToOneField('Classroom', blank = True, on_delete=models.SET_NULL, null=True)
 
 class Student(models.Model):
     name = models.CharField(max_length = 128)
     studentID = models.IntegerField(unique=True)
     phoneNumber = models.CharField(max_length = 20, null=True)
-    #classrooms = models.ManyToManyField(Classroom)
     def __str__(self):
         return self.name
 
@@ -27,14 +29,12 @@ class Classroom(models.Model):
 
     quarter = models.IntegerField(choices=SEASONS)
     year = models.IntegerField(choices=[(i,i) for i in range(2018, datetime.now().year + 1)])
+    instructor = models.ForeignKey(InstructorUser, on_delete=models.SET_NULL, null=True) #change on_delete
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+    start_time = models.TimeField(null=True)
+    end_time = models.TimeField(null=True)
 
-    StartDate = models.DateTimeField(null=True)
-    EndDate = models.DateTimeField(null=True)
-
-    StartTime = models.TimeField(null=True)
-    EndTime = models.TimeField(null=True)
-
-    instructor = models.ForeignKey(User, on_delete=models.CASCADE) #change on_delete
     def __str__(self):
         return self.className
     def __init__(self, *args, **kwargs):
@@ -43,9 +43,9 @@ class Classroom(models.Model):
             chars = ascii_uppercase + digits
             self.classKey = ''.join(choices(chars, k=5))
 
-    def duplicate(self, user, quarter, year):
+    def duplicate(self, user, name, quarter, year):
         dupe = Classroom.objects.create(instructor = user,
-                                        className=self.className+' copy',
+                                        className=name,
                                         classNumber=self.classNumber,
                                         quarter=quarter,
                                         year=year)
@@ -59,33 +59,23 @@ class Classroom(models.Model):
                                 )
             newPoll.save()
 
-
+    def isActive(self):
+        if datetime.now().date() > self.end_date or datetime.now().date() < self.start_date:
+            return False
+        else:
+            return True
 
 class Poll(models.Model):
     name = models.CharField(max_length = 64)
     options = models.IntegerField()
-    correct = models.IntegerField(default=1)
+    correct = models.IntegerField(default=0)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null=True)
-    startTime = models.DateTimeField(null=True)
-    stopTime = models.DateTimeField(null=True)
+    startTime = models.DateTimeField(editable=True,blank=True, null=True)
+    stopTime = models.DateTimeField(editable=True,blank=True, null=True)
     isPollActive = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
-
-    #def isActive(self):
-    #    stTime = datetime.now()
-    #    stTime = stTime.replace(hour=(self.startTime.hour), minute=(self.startTime.minute))
-    #    print(stTime)
-    #    enTime = datetime.now()
-    #    enTime = enTime.replace(hour=(self.stopTime.hour), minute=(self.stopTime.minute))
-    #    print(enTime)
-    #
-    #    if(stTime < datetime.now()):
-    #        if(enTime > datetime.now()):
-    #            return True
-    #    return False
-
 
 class Answer(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)

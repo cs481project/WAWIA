@@ -1,36 +1,75 @@
-﻿{% extends 'pollingSite/base.html' %}
-{% load static %}
+{% extends 'pollingSite/base.html' %}
+{% load static pollingSite_tags %}
 {% block content %}
-<label style="text-align:center"><font size="6"><b>{{ poll.name }}</b></font></label>
+<label style="text-align:center"><font size="6"><b>Polling in {{ request.user.activeClass }}</b></font></label>
+<label style="text-align:center"><font size="5" style="color:#990000"><b>Text: 509-303-4655</b></font></label>
 <div class="row">
     <div class="two columns"><label style="text-align:right; font-size:xx-large"><b>&nbsp;</b></label></div>
     <div class="five columns"><label style="text-align:right; font-size:xx-large"><b>Total Submissions:</b></label></div>
     <div class="two columns"><label style="text-align:right; font-size:xx-large"><b>{{totalSub}}</b></label></div>
 </div>
-<div class="row">
-    <div class="four columns"><label><b>&nbsp;</b></label></div>
-    <div class="four columns"><button onclick="myFunction('one column')" style="background-color: #990000"> Toggle Answers </button></div>
-    <div class="four columns"><label><b>&nbsp;</b></label></div>
-</div>
+
+
     <div class="row">
+
+        {% if poll.correct == 0 %}
+        <div class="row">
+            <div class="four columns"><label><b>&nbsp;</b></label></div>
+            <div class="four columns"><button onclick="myFunction('answer')" style="background-color: #990000"> Toggle Answers </button></div>
+            <div class="four columns"><label><b>&nbsp;</b></label></div>
+        </div>
+        <div class="two columns answer" style="display:none"><label style="text-align:right;font-size:x-large"><b>Option</b></label></div>
+        <div class="five columns answer" style="display:none"><label style="text-align:right;font-size:x-large"><b>Total Answers for Option</b></label></div>
+        </div>
         {% for option in options %}
-        <div id ="answers"class="row">
+        <div id="answers" class="row">
             {% if forloop.counter == poll.correct %}
-            <div class="one column" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
-            <div class="one column" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
+            <div class="two columns answer" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
+            <div class="four columns answer" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
             {% else %}
-            <div class="one column" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter }}.</b></label></div>
-            <div class="one column" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
-        {% endif %}
+            <div class="two columns answer" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
+            <div class="four columns answer" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <form method="post"style="border-color:white">
+            
+            <div class="row fin" id="Stop" style="display:block">
+                <div class="four columns"><label><b>&nbsp;</b></label></div>
+                <div class="four columns"><button type="submit" onclick="myFunction('fin');" style="background-color: #990000"> Close Poll </button></div>
+                <div class="four columns"><label><b>&nbsp;</b></label></div>
+            </div>
+            <div class="row fin" id="Close" style="display:none">
+                {% csrf_token %}
+                {{form.as_table}}
+                <div class="row">
+                    <div class="four columns"><label><b>&nbsp;</b></label></div>
+                    <div class="four columns"><a style="text-decoration:none; color:inherit"><button type="submit" style="background-color: #990000"> Show Responses </button></a></div>
+                    <div class="four columns"><label><b>&nbsp;</b></label></div>
+                </div>
+            </div>
+        </form>
+        {% else %}
+        {% for option in options %}
+        <div id="answers" class="row">
+            {% if forloop.counter == poll.correct %}
+            <div class="one column"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
+            <div class="one column"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
+            {% else %}
+            <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
+            <div class="one column"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
+            {% endif %}
         </div>
         {% endfor %}
         <div class="row">
             <div class="four columns"><label><b>&nbsp;</b></label></div>
-            <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:pollList' poll.classroom.id %}"><button type="submit" style="background-color: #990000"> Close Poll </button></a></div>
+            <div class="four columns"><a style="text-decoration:none; color:inherit" href="{% url 'pollingSite:createPoll' classroom %}"><button type="button" style="background-color: #990000"> Run New Poll</button></a></div>
             <div class="four columns"><label><b>&nbsp;</b></label></div>
-
         </div>
-    </div>
+        
+        {% endif %}
+
+
     {% endblock content %}
 
 {% block JavaScrpt %}

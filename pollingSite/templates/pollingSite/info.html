@@ -1,0 +1,32 @@
+{% extends 'pollingSite/base.html' %}
+{% block content %}
+<label style="text-align:center"><font size="6"><b>How to for Students</b></font></label>
+<label style="text-align:center"><font size="4"><b>{{classroom.className}}</b></font></label>
+<div class="row">
+<font size="3">
+<table class="u-full-width">
+<thead>
+<tr>
+    <th>Command</th>
+    <th>Message</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td>Register:</td>
+    <td>Register FirstName LastName StudentID {{classroom.classKey}}</td>
+</tr>
+<tr>
+    <td>Updating Info:</td>
+    <td>Update StudentID FirstName LastName</td>
+</tr>
+<tr>
+    <td>Answer a Poll:</td>
+    <td>Simply text the letter of the answer</td>
+</tr>
+</tr>
+</tbody>
+</table>
+</font>
+</div>
+{% endblock content %}
