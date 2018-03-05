@@ -9,10 +9,24 @@ SEASONS = ((0,"Winter"), (1,"Spring"), (2,"Summer"), (3,"Fall"))
 class InstructorUser(AbstractUser):
     activeClass = models.OneToOneField('Classroom', blank = True, on_delete=models.SET_NULL, null=True)
 
+class Student(models.Model):
+    name = models.CharField(max_length = 128)
+    studentID = models.IntegerField(unique=True)
+    phoneNumber = models.CharField(max_length = 20, null=True)
+    def __str__(self):
+        return self.name
+
+
 class Classroom(models.Model):
     classNumber = models.CharField(max_length = 20, default="")
     className = models.CharField(max_length = 64, default=classNumber)
     classKey = models.CharField(max_length = 6, unique=True)
+
+    students = models.ManyToManyField(Student)
+
+    class Meta:
+        ordering = ('className',)
+
     quarter = models.IntegerField(choices=SEASONS)
     year = models.IntegerField(choices=[(i,i) for i in range(2018, datetime.now().year + 1)])
     instructor = models.ForeignKey(InstructorUser, on_delete=models.SET_NULL, null=True) #change on_delete
@@ -33,7 +47,7 @@ class Classroom(models.Model):
         dupe = Classroom.objects.create(instructor = user,
                                         className=name,
                                         classNumber=self.classNumber,
-                                        quarter=quarter, 
+                                        quarter=quarter,
                                         year=year)
         dupe.save()
         for poll in Poll.objects.filter(classroom=self):
@@ -51,15 +65,6 @@ class Classroom(models.Model):
         else:
             return True
 
-class Student(models.Model):
-    name = models.CharField(max_length = 128)
-    lastname = models.CharField(max_length = 128, default='smith')
-    studentID = models.IntegerField(unique=True)
-    phoneNumber = models.CharField(max_length = 20, null=True)
-    classrooms = models.ManyToManyField(Classroom)
-    def __str__(self):
-        return self.name
-
 class Poll(models.Model):
     name = models.CharField(max_length = 64)
     options = models.IntegerField()
@@ -67,7 +72,8 @@ class Poll(models.Model):
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null=True)
     startTime = models.DateTimeField(editable=True,blank=True, null=True)
     stopTime = models.DateTimeField(editable=True,blank=True, null=True)
-            
+    isPollActive = models.BooleanField(default=False)
+
     def __str__(self):
         return self.name
 

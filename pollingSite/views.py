@@ -16,6 +16,8 @@ from django.db.models.functions import Trunc
 from .models import *
 from .forms import *
 
+import traceback
+
 register = template.Library()
 
 def classroomSecureWrapper(function):
@@ -31,14 +33,169 @@ def classroomSecureWrapper(function):
 def recieveSMS(request):
     if request.method == 'POST':
         #save inbound text into variable
-        holdText = request.POST['Text']
+        #holdText = "Jane Doe 77777777 key999"#request.POST['Text']
+
+        # register format is "Reg First Last ID classKey"
+        #holdText = "Register George Washington 1337 key999"
+
+        # update format is "Up First Last ID"
+        #holdText = "Update Thomas Jefferson 548234327"
+
+        # send an answer
+        holdText = "T"
+
+        #studentNumber = 5093313630#4252319279
+
+        #holdText = "2"
+        studentNumber = 1112223333#request.POST['src']#https://www.plivo.com/docs/api/message/
 
         #parse text into a list
-        incoming_text = holdText.split(", ")
+        incoming_text = holdText.split(" ")
 
-        #create new object and update fields
-        newStudent = Answer.objects.create(poll=Poll.objects.get(key=incoming_text[0]), value=incoming_text[1], timestamp=now(), student=Student.objects.get(name='FakeNews'))
-        return HttpResponse("Message Received")
+        print(len(incoming_text))
+
+        if(len(incoming_text) == 4):  # Update takes 4 arguments
+            #check if first element is "Update". if it is not, then return
+            if(incoming_text[0].lower() == "update"):
+                #update
+                try:
+                    Student.objects.filter(phoneNumber=studentNumber).update(name=incoming_text[1], studentID=incoming_text[3])  # remember to add last name when change models
+                    print("student got updated")
+                except:
+                    print("An error occured when trying to update student")
+                    traceback.print_exc()
+
+        elif(len(incoming_text) == 5):
+            if(incoming_text[0].lower() == "register"):  # Register takes 5 arguments
+                stdName = incoming_text[1] + incoming_text[2]
+                # create new student
+                print(Student.objects.filter(phoneNumber=studentNumber).exists())  # does the student exist?
+                try:
+                    if(Student.objects.filter(phoneNumber=studentNumber).exists()):  # if the student exists, dont do anything
+                        print("An error occured. The student already exists")
+                        return render(request, 'pollingSite/test.html',locals())
+                    else:  # if the student doesnt exist, create the student
+                        studentCreate = Student.objects.create(name=stdName, studentID=incoming_text[3], phoneNumber=studentNumber)
+                        print(studentCreate)
+                        # get classroom with that class key
+                        Classroom.objects.get(classKey=incoming_text[4].upper()).students.add(studentCreate)
+                        print("Created a student")
+                except:
+                    print("An error occured when trying to add a student")
+                    traceback.print_exc()
+                    # now only need to add the student to the class
+                    #return render(request, 'pollingSite/test.html',locals
+
+        elif(len(incoming_text) != 1):
+            print("Not correct number of arguments needed. 1 argument needed")
+            return render(request, 'pollingSite/test.html',locals())
+        else:  # so if argument is 1
+            studentAnswerLetter = holdText#incoming_text[0]
+            print(studentAnswerLetter)
+            studentAnswer = 0  #initilize studentAnswer
+
+            if(studentAnswerLetter == "A"):
+                studentAnswer = 1
+            elif(studentAnswerLetter == "B"):
+                studentAnswer = 2
+            elif(studentAnswerLetter == "C"):
+                studentAnswer = 3
+            elif(studentAnswerLetter == "D"):
+                studentAnswer = 4
+            elif(studentAnswerLetter == "E"):
+                studentAnswer = 5
+            elif(studentAnswerLetter == "F"):
+                studentAnswer = 6
+            elif(studentAnswerLetter == "G"):
+                studentAnswer = 7
+            elif(studentAnswerLetter == "H"):
+                studentAnswer = 8
+            elif(studentAnswerLetter == "I"):
+                studentAnswer = 9
+            elif(studentAnswerLetter == "J"):
+                studentAnswer = 10
+            elif(studentAnswerLetter == "K"):
+                studentAnswer = 11
+            elif(studentAnswerLetter == "L"):
+                studentAnswer = 12
+            elif(studentAnswerLetter == "M"):
+                studentAnswer = 13
+            elif(studentAnswerLetter == "N"):
+                studentAnswer = 14
+            elif(studentAnswerLetter == "O"):
+                studentAnswer = 15
+            elif(studentAnswerLetter == "P"):
+                studentAnswer = 16
+            elif(studentAnswerLetter == "Q"):
+                studentAnswer = 17
+            elif(studentAnswerLetter == "R"):
+                studentAnswer = 18
+            elif(studentAnswerLetter == "S"):
+                studentAnswer = 19
+            elif(studentAnswerLetter == "T"):
+                studentAnswer = 20
+            elif(studentAnswerLetter == "U"):
+                studentAnswer = 21
+            elif(studentAnswerLetter == "V"):
+                studentAnswer = 22
+            elif(studentAnswerLetter == "W"):
+                studentAnswer = 23
+            elif(studentAnswerLetter == "X"):
+                studentAnswer = 24
+            elif(studentAnswerLetter == "Y"):
+                studentAnswer = 25
+            elif(studentAnswerLetter == "Z"):
+                studentAnswer = 26
+            else:
+                #return (answer was not valid)
+                print("The argument is not valid")
+                return render(request, 'pollingSite/test.html',locals())
+
+            studentIdentifier = Student.objects.get(phoneNumber=studentNumber)
+            print(studentNumber)
+            print(studentIdentifier.studentID)
+
+            studentClassroom = Classroom.objects.filter(students=studentIdentifier)
+            print(studentClassroom)
+
+            currentTime = datetime.now()
+            #currentTime = currentTime.replace(hour=19, minute=1) #comment before final
+            #currentTime = datetime.combine(currentTime, datetime.min.time())
+            print(currentTime)
+
+            for item in studentClassroom:
+                start = datetime.now()
+                start = start.replace(hour=(item.StartTime.hour), minute=(item.StartTime.minute))
+
+                end = datetime.now()
+                hour = item.EndTime.hour
+                minutez = item.EndTime.minute
+                end = end.replace(hour=hour, minute=minutez)
+
+                if(currentTime > start and currentTime < end):
+                    print(item.className)
+                    # get poll from that current class
+                    currentClass = item
+                    currentPolls = Poll.objects.filter(classroom=item)
+
+                    print(currentPolls)
+
+                    # checks all the list of polls
+                    for itemPoll in currentPolls:
+                        if(itemPoll.isPollActive):  #if the poll is active
+                            print(itemPoll)  # create an answer to that poll
+                            Answer.objects.create(poll=itemPoll, student=studentIdentifier, value=studentAnswer, timestamp=currentTime)
+
+                    #print(classActivePoll)
+                    #create answer
+                    #newAnswer = Answer.objects.create(poll=Poll.objects.get(key=incoming_text[0]), value=incoming_text[1], timestamp=now(), student=Student.objects.get(name=studentIdentifier))
+                else:
+                    print("No class currently")
+
+            #create new object and update fields
+            #newStudent = Answer.objects.create(poll=Poll.objects.get(key=incoming_text[0]), value=incoming_text[1], timestamp=now(), student=Student.objects.get(name='FakeNews'))
+            #return HttpResponse("Message Received")
+    return render(request, 'pollingSite/test.html',locals())
 
 def landing(request):
     if request.user.is_authenticated:
@@ -185,6 +342,7 @@ def pollLanding(request):
         return redirect('pollingSite:createPoll', request.user.activeClass.id)
 
 @login_required
+@classroomSecureWrapper
 def info(request, classroom):
     classroom = Classroom.objects.get(id=classroom)
     return render(request, 'pollingSite/info.html', locals())
