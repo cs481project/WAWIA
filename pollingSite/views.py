@@ -227,12 +227,13 @@ def activePoll(request, poll, classroom):
     if request.method == 'POST':
         form = correctAnswerForm(request.POST, poll.options)
         if form.is_valid():
-            poll.correct= form.cleaned_data['correct_answer']
+            poll.correct = form.cleaned_data['correct_answer']
             poll.save(update_fields=['correct'])
             return render(request, 'pollingSite/activePoll.html', locals())
         else:
             poll.stopTime = datetime.now()
             poll.save()
+            return HttpResponse(status=100)
     else:
         form = correctAnswerForm(poll.options)        
         return render(request, 'pollingSite/activePoll.html', locals())

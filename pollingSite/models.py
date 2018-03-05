@@ -65,17 +65,11 @@ class Poll(models.Model):
     options = models.IntegerField()
     correct = models.IntegerField(default=0)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null=True)
-    startTime = models.DateTimeField(editable=True,null=True)
-    stopTime = models.DateTimeField(editable=True,null=True)
+    startTime = models.DateTimeField(editable=True,blank=True, null=True)
+    stopTime = models.DateTimeField(editable=True,blank=True, null=True)
             
     def __str__(self):
         return self.name
-		
-    def isActive(self):
-        if(self.startTime < datetime.now()):
-            if(self.stopTime is not null or (self.stopTime > datetime.now())):
-                return True
-        return False
 
 class Answer(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
