@@ -17,19 +17,17 @@
             <th><label style="text-align:left; font-size:x-large">Attendance</label></th>
         </tr>
 
-
         {% for item in items %}
-
-
+        
         <tr>
             <th>{{item.3.lastname}} {{item.3.name}}</th>
             <th>{{item.3.studentID}}</th>
             <th>{{item.0|length}}/{{item.1|length}}&nbsp;&nbsp;{{item.4}}% </th>
             <th>{{item.1|length}}/{{item.2|length}}&nbsp;&nbsp;{{item.5}}%</th>
         </tr>
-
-
+        {%empty%}
+        <tr><th>There are not students registered!</th></tr>
         {%endfor%}
-
+        
     </table>
     {% endblock content %}

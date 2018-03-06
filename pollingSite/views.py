@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.crypto import get_random_string
 from django.utils.timezone import now
+from django.utils import timezone
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import login as authLogin
 from django.views.decorators.csrf import csrf_exempt
@@ -271,10 +272,11 @@ def report(request):
             start_t = form.cleaned_data['start_date']
             end_t = form.cleaned_data['end_date']
             curClass=form.cleaned_data['choose_class']
-            students = Student.objects.filter(classrooms=curClass)
+            students = Student.objects.filter(classroom=curClass)
             students = sorted(students, key=operator.attrgetter('lastname'))
             print(curClass)
             for student1 in students:
+                students_length = len(students)
                 correctAnswer = []
                 answers = []
                 polllist = []
@@ -320,9 +322,9 @@ def addClass(request):
             if request.user.activeClass == None:
                 request.user.activeClass = classroom
                 request.user.save()
-                return redirect('pollingSite:createPoll', classroom.id)
+                return redirect('pollingSite:index')
             else:
-                return redirect('pollingSite:index');
+                return redirect('pollingSite:index')
     else:
         form = createClassForm()
         return render(request, 'pollingSite/addClass.html', locals())
@@ -362,8 +364,9 @@ def createPoll(request, classroom):
         form = createPollForm(request.POST)
         if form.is_valid():
             newPoll = Poll.objects.create(classroom = Classroom.objects.get(pk=classroom), name="", options=form.cleaned_data['possible_answers'], startTime = datetime.now(), stopTime = datetime.now())
-            newPoll.startTime = datetime.now()
+            newPoll.startTime = timezone.now()
             newPoll.save()
+
             return redirect('pollingSite:activePoll', curClass1, newPoll.id)
     elif classroom is 'None':
         return redirect('pollingSite:addClass')
@@ -387,11 +390,12 @@ def activePoll(request, poll, classroom):
         if form.is_valid():
             poll.correct = form.cleaned_data['correct_answer']
             poll.save(update_fields=['correct'])
+            
             return render(request, 'pollingSite/activePoll.html', locals())
         else:
-            poll.stopTime = datetime.now()
+            poll.stopTime = timezone.now()
             poll.save()
-            return HttpResponse(status=100)
+            return render(request, 'pollingSite/activePoll.html', locals())
     else:
         form = correctAnswerForm(poll.options)        
         return render(request, 'pollingSite/activePoll.html', locals())

@@ -12,7 +12,7 @@
 
     <div class="row">
 
-        {% if poll.correct == 0 %}
+        {% if poll.correct == 0 and poll.stopTime < poll.startTime %}
         <div class="row">
             <div class="four columns"><label><b>&nbsp;</b></label></div>
             <div class="four columns"><button onclick="myFunction('answer')" style="background-color: #990000"> Toggle Answers </button></div>
@@ -49,7 +49,39 @@
                 </div>
             </div>
         </form>
-        {% else %}
+        {% elif poll.correct == 0 and poll.stopTime > poll.startTime %}
+<div class="row">
+    <div class="four columns"><label><b>&nbsp;</b></label></div>
+    <div class="four columns"><button onclick="myFunction('answer')" style="background-color: #990000"> Toggle Answers </button></div>
+    <div class="four columns"><label><b>&nbsp;</b></label></div>
+</div>
+<div class="two columns answer" style="display:none"><label style="text-align:right;font-size:x-large"><b>Option</b></label></div>
+<div class="five columns answer" style="display:none"><label style="text-align:right;font-size:x-large"><b>Total Answers for Option</b></label></div>
+        </div>
+        {% for option in options %}
+<div id="answers" class="row">
+    {% if forloop.counter == poll.correct %}
+    <div class="two columns answer" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
+    <div class="four columns answer" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
+    {% else %}
+    <div class="two columns answer" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
+    <div class="four columns answer" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
+    {% endif %}
+</div>
+        {% endfor %}
+<form method="post" style="border-color:white">
+
+    <div class="row fin" id="Close" style="display:block">
+        {% csrf_token %}
+        {{form.as_table}}
+        <div class="row">
+            <div class="four columns"><label><b>&nbsp;</b></label></div>
+            <div class="four columns"><a style="text-decoration:none; color:inherit"><button type="submit" style="background-color: #990000"> Show Responses </button></a></div>
+            <div class="four columns"><label><b>&nbsp;</b></label></div>
+        </div>
+    </div>
+</form>
+{% else %}
         {% for option in options %}
         <div id="answers" class="row">
             {% if forloop.counter == poll.correct %}
