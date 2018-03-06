@@ -28,7 +28,7 @@ class correctAnswerForm(forms.Form):
         super(correctAnswerForm, self).__init__()
         if 'choices' in kwargs:
             choices = kwargs.pop('choices')
-            self.fields['correct_answer'].choices=forms.ChoiceField([(i,chr(64+i)) for i in range(1,choices+1)])
+            self.fields['correct_answer'].choices=forms.ChoiceField([(i,chr(64+i)) for i in range(1,options+1)])
 
 class attendanceFormForm(forms.Form):
     start_date = forms.DateField(widget=forms.SelectDateWidget)
