@@ -4,6 +4,7 @@ from .models import *
 
 class StudentAdmin(admin.ModelAdmin):
     list_display = ('name', 'studentID')
+    exclude = ('phoneNumber',)
 
 class ClassroomAdmin(admin.ModelAdmin):
     list_display = ('className', 'classNumber', 'instructor')

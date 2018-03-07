@@ -55,8 +55,9 @@ class Student(models.Model):
     name = models.CharField(max_length = 128)
     lastname = models.CharField(max_length = 128, default='smith')
     studentID = models.IntegerField(unique=True)
-    phoneNumber = models.CharField(max_length = 20, null=True)
+    phoneNumber = models.CharField(max_length = 20,unique = True)
     classrooms = models.ManyToManyField(Classroom)
+    
     def __str__(self):
         return self.name
 

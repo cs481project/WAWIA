@@ -25,7 +25,7 @@ SECRET_KEY = 'tc57!p=$$%h)ej7v63e%f+_^jqst7so(988oo-)q1)zh@*on#q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1','71.80.192.118']
+ALLOWED_HOSTS = ['127.0.0.1','10.32.106.113']
 
 
 # Application definition
@@ -76,9 +76,13 @@ WSGI_APPLICATION = 'WAWIA.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'DB',
+	    'USER': 'keyla',
+	    'PASSWORD': 'Kncl11-17',
+	    'HOST': '127.0.0.1',
+	    'PORT': '3306',
+	}
 }
 
 
