@@ -444,9 +444,10 @@ def activePoll(request, poll, classroom):
         options.append(next)
         totalSub += next
     if request.method == 'POST':
-        form = correctAnswerForm(request.POST, choices=poll.options)
+        form = correctAnswerForm(request.POST)
         if form.is_valid():
-            poll.correct = form.cleaned_data['correct_answer']
+            charval = form.cleaned_data['correct_answer']
+            poll.correct = ord(charval.upper()) - 64
             poll.save(update_fields=['correct'])
             return render(request, 'pollingSite/activePoll.html', locals())
         else:
@@ -455,7 +456,7 @@ def activePoll(request, poll, classroom):
             poll.save()
             return render(request, 'pollingSite/activePoll.html', locals())
     else:
-        form = correctAnswerForm(choices=poll.options)
+        form = correctAnswerForm()
         otherPolls = Poll.objects.filter(classroom=Classroom.objects.get(id=classroom))
         for poll in otherPolls:
             poll.isPollActive = False
