@@ -46,7 +46,7 @@ def recieveSMS(request):
         ##holdText = "Update Thomas Jefferson 548234327"
 
         # send an answer
-       # holdText = "T"
+        # holdText = "T"
 
         #studentNumber = 4252319279#1029384756
 
@@ -331,7 +331,7 @@ def report(request):
                             print(end_t)
                             if answer.timestamp.date() >= start_t and answer.timestamp.date() <= end_t+ timedelta(days=1) and curClass == answer.poll.classroom:
                                 answerstopolls.append(answer)
-                            if poll.startTime <= answer.timestamp and answer.timestamp <= poll.stopTime and answer.value == poll.correct and student1.name==answer.student.name:
+                            if poll.startTime <= answer.timestamp and answer.timestamp <= poll.stopTime and answer.value == poll.correct and student1.name==answer.student.name and student1.lastname == answer.student.lastname:
                                 correctAnswer.append(answer)
                         if(len(answerstopolls)!=0):
                             totalnumbers=((len(correctAnswer)/len(answerstopolls))*100)
@@ -449,9 +449,8 @@ def activePoll(request, poll, classroom):
             charval = form.cleaned_data['correct_answer']
             poll.correct = ord(charval.upper()) - 64
             poll.save(update_fields=['correct'])
-            return render(request, 'pollingSite/activePoll.html', locals())
-        else:
             poll.stopTime = timezone.now()
+            poll.save(update_fields=['stopTime'])            
             poll.isPollActive=False;
             poll.save()
             return render(request, 'pollingSite/activePoll.html', locals())
