@@ -318,6 +318,8 @@ def addClass(request):
                 year=form.cleaned_data['year'],
                 start_date=form.cleaned_data['start_date'],
                 end_date=form.cleaned_data['end_date'],
+                start_time=form.cleaned_data['start_time'],
+                end_time=form.cleaned_data['end_time'],
                 instructor=request.user)
             if request.user.activeClass == None:
                 request.user.activeClass = classroom
@@ -328,6 +330,26 @@ def addClass(request):
     else:
         form = createClassForm()
         return render(request, 'pollingSite/addClass.html', locals())
+
+@login_required
+@classroomSecureWrapper
+def edit(request, classroom):
+    thisClass = Classroom.objects.get(id=classroom)
+    if request.method == 'POST':
+        form = createClassForm(request.POST, instance=thisClass)
+        if form.is_valid():
+            editClass = Classroom.objects.get(id=classroom)
+            editClass.className = form.cleaned_data['class_name']
+            editClass.quarter = form.cleaned_data['quarter']
+            editClass.year = form.cleaned_data['year']
+            editClass.start_date = form.cleaned_data['start_date']
+            editClass.end_date = form.cleaned_data['end_date']
+            editClass.start_time = form.cleaned_data['start_time']
+            editClass.end_time = form.cleaned_data['end_time']
+            return redirect('pollingSite:index')
+    else:
+        form = editClassForm(instance=thisClass)
+        return render(request, 'pollingSite/editClass.html', locals())
 
 @login_required
 @classroomSecureWrapper
@@ -386,16 +408,23 @@ def activePoll(request, poll, classroom):
         options.append(next)
         totalSub += next
     if request.method == 'POST':
-        form = correctAnswerForm(request.POST, poll.options)
+        form = correctAnswerForm(request.POST, choices=poll.options)
         if form.is_valid():
             poll.correct = form.cleaned_data['correct_answer']
             poll.save(update_fields=['correct'])
-            
             return render(request, 'pollingSite/activePoll.html', locals())
         else:
             poll.stopTime = timezone.now()
+            poll.isPollActive=False;
             poll.save()
             return render(request, 'pollingSite/activePoll.html', locals())
     else:
-        form = correctAnswerForm(poll.options)        
+        form = correctAnswerForm(choices=poll.options)
+        otherPolls = Poll.objects.filter(classroom=Classroom.objects.get(id=classroom))
+        for poll in otherPolls:
+            poll.isPollActive = False
+            poll.save(update_fields=['isPollActive']) 
+
+        poll.isPollActive=True
+        poll.save(update_fields=['isPollActive'])     
         return render(request, 'pollingSite/activePoll.html', locals())

@@ -1,6 +1,6 @@
 {% extends 'pollingSite/base.html' %}
 {% block content %}
-<label style="text-align:center"><font size="6"><b>Add Class</b></font></label>
+<label style="text-align:center"><font size="6"><b>Edit Class</b></font></label>
     {% include 'pollingSite/homebar.html' %}
         <form method="post"style="border-color:white">
         {% csrf_token %}
@@ -9,7 +9,7 @@
             <div class="row">&nbsp;</div>
             <div class="row">
                 <div class="three columns"><label><b>&nbsp;</b></label></div>
-                <div class="six columns"><button style="background-color: #990000">Add Class</button></div>
+                <div class="six columns"><button style="background-color: #990000">Update Class</button></div>
                 <div class="three columns"><label><b>&nbsp;</b></label></div>
             </div>
         </form>
