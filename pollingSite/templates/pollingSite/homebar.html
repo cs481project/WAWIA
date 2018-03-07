@@ -1,0 +1,20 @@
+<div class="row">
+        <div class="four columns">&nbsp;</div>
+        <div class="eight columns">
+            {% if 'index/' in request.path or 'editclass/' in request.path %}
+            <div class="four columns"><a href="{% url 'pollingSite:index' %}"><button type="submit" style="background-color: #990000"><b>Classes</b></button></a></div>
+            {% else %}
+            <div class="four columns"><a href="{% url 'pollingSite:index' %}"><button type="submit"><b>Classes</b></button></a></div>
+            {% endif %}
+            {% if 'addclass/' in request.path%}
+            <div class="four columns"><a href="{% url 'pollingSite:addClass' %}"><button type="submit" style="background-color: #990000"><b>Add Class</b></button></a></div>
+            {% else %}
+            <div class="four columns"><a href="{% url 'pollingSite:addClass' %}"><button type="submit"><b>Add Class</b></button></a></div>
+            {% endif %}
+            {% if 'change-password/' in request.path %}
+            <div class="four columns"><a href="{% url 'pollingSite:changePassword' %}"><button type="submit" style="background-color: #990000"><b>Change Password</b></button></a></div>
+            {% else %}
+            <div class="four columns"><a href="{% url 'pollingSite:changePassword' %}"><button type="submit"><b>Change Password</b></button></a></div>
+            {% endif %}
+        </div>
+</div>

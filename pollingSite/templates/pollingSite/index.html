@@ -3,10 +3,9 @@
 {% block content %}
 
 <div class="row">
-    <div class="six columns">&nbsp;</div>
-    <div class="three columns">&nbsp;</div>
-    <div class="three columns">&nbsp;</div>
-    <div class="row"><b>To Register Text: Register FirstName LastName StudentID (class key) to 509-303-4655</b></div>
+    <label style="text-align:center"><font size="6"><b>Whose Answer Was It Anyways?</b></font></label>
+         {% include 'pollingSite/homebar.html' %}
+             <div class="row"><b>To Register Text: Register FirstName LastName StudentID (class key) to 509-303-4655</b></div>
     <div class="row"><b>To Update Info Text: Update StudentID FirstName LastName</b></div>
     <div class="row"><b>To Answer a Poll: Simply text the letter of the answer</b></div>
         {% for class in classroom %}
@@ -53,7 +52,7 @@
                     </font>
                 </div>
                 <div class="three columns">
-                    <a href="{% url 'pollingSite:info' class.id %}">Info</a>
+                    <a href="{% url 'pollingSite:edit' class.id %}">Edit</a>
                 </div>
             </div>
             {% endfor %}
