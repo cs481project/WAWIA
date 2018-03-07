@@ -34,7 +34,7 @@ def classroomSecureWrapper(function):
 def recieveSMS(request):
     if request.method == 'POST':
         #save inbound text into variable
-        #holdText = "Jane Doe 77777777 key999"#request.POST['Text']
+        holdText = request.POST['Text']
 
         # register format is "Reg First Last ID classKey"
         #holdText = "Register George Washington 1337 key999"
@@ -43,25 +43,29 @@ def recieveSMS(request):
         #holdText = "Update Thomas Jefferson 548234327"
 
         # send an answer
-        holdText = "T"
+       # holdText = "T"
 
         #studentNumber = 5093313630#4252319279
 
         #holdText = "2"
-        studentNumber = 1112223333#request.POST['src']#https://www.plivo.com/docs/api/message/
+        studentNumber = request.POST['From'] #https://www.plivo.com/docs/api/message/
 
         #parse text into a list
         incoming_text = holdText.split(" ")
 
         print(len(incoming_text))
 
-        if(len(incoming_text) == 4):  # Update takes 4 arguments
+        if(len(incoming_text) == 3):  # Update takes 4 arguments
             #check if first element is "Update". if it is not, then return
             if(incoming_text[0].lower() == "update"):
                 #update
                 try:
-                    Student.objects.filter(phoneNumber=studentNumber).update(name=incoming_text[1], studentID=incoming_text[3])  # remember to add last name when change models
+                    stud = Student.objects.get(phoneNumber=studentNumber)
+                    stud.name=incoming_text[1]
+                    stud.last_name=incoming_text[2]
+                    stud.save()
                     print("student got updated")
+                    return HttpResponse("Message Recieved")
                 except:
                     print("An error occured when trying to update student")
                     traceback.print_exc()
@@ -74,9 +78,9 @@ def recieveSMS(request):
                 try:
                     if(Student.objects.filter(phoneNumber=studentNumber).exists()):  # if the student exists, dont do anything
                         print("An error occured. The student already exists")
-                        return render(request, 'pollingSite/test.html',locals())
+                        return HttpResponse("Message Recieved")#return render(request, 'pollingSite/test.html',locals())
                     else:  # if the student doesnt exist, create the student
-                        studentCreate = Student.objects.create(name=stdName, studentID=incoming_text[3], phoneNumber=studentNumber)
+                        studentCreate = Student.objects.create(name=incoming_text[1], last_name=incoming_text[2], studentID=incoming_text[3], phoneNumber=studentNumber)
                         print(studentCreate)
                         # get classroom with that class key
                         Classroom.objects.get(classKey=incoming_text[4].upper()).students.add(studentCreate)
@@ -150,7 +154,7 @@ def recieveSMS(request):
             else:
                 #return (answer was not valid)
                 print("The argument is not valid")
-                return render(request, 'pollingSite/test.html',locals())
+                #return render(request, 'pollingSite/test.html',locals())
 
             studentIdentifier = Student.objects.get(phoneNumber=studentNumber)
             print(studentNumber)
@@ -166,11 +170,11 @@ def recieveSMS(request):
 
             for item in studentClassroom:
                 start = datetime.now()
-                start = start.replace(hour=(item.StartTime.hour), minute=(item.StartTime.minute))
+                start = start.replace(hour=(item.start_time.hour), minute=(item.start_time.minute))
 
                 end = datetime.now()
-                hour = item.EndTime.hour
-                minutez = item.EndTime.minute
+                hour = item.end_time.hour
+                minutez = item.end_time.minute
                 end = end.replace(hour=hour, minute=minutez)
 
                 if(currentTime > start and currentTime < end):
@@ -196,7 +200,7 @@ def recieveSMS(request):
             #create new object and update fields
             #newStudent = Answer.objects.create(poll=Poll.objects.get(key=incoming_text[0]), value=incoming_text[1], timestamp=now(), student=Student.objects.get(name='FakeNews'))
             #return HttpResponse("Message Received")
-    return render(request, 'pollingSite/test.html',locals())
+    #return render(request, 'pollingSite/test.html',locals())
 
 def landing(request):
     if request.user.is_authenticated:
