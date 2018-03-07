@@ -340,10 +340,10 @@ def addClass(request):
 def edit(request, classroom):
     thisClass = Classroom.objects.get(id=classroom)
     if request.method == 'POST':
-        form = createClassForm(request.POST, instance=thisClass)
+        form = editClassForm(request.POST, instance=thisClass)
         if form.is_valid():
             editClass = Classroom.objects.get(id=classroom)
-            editClass.className = form.cleaned_data['class_name']
+            editClass.className = form.cleaned_data['className']
             editClass.quarter = form.cleaned_data['quarter']
             editClass.year = form.cleaned_data['year']
             editClass.start_date = form.cleaned_data['start_date']
