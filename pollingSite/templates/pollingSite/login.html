@@ -1,7 +1,10 @@
 ﻿{% extends 'pollingSite/base.html' %}
+{% load static %}
 {% block body %}
 <body>
     <div class="container" style="text-align:center">
+        <div class="row"><img src="{% static 'pollingSite/images/Logo.png' %}" style="width:100%" alt="Logo">
+</div>
         <form action="" method="post" style="border-color:white">{% csrf_token %}
             <label><b>Username </b></label>
             {{form.username}}
