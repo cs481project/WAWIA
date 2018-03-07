@@ -10,8 +10,8 @@ class createClassForm(forms.Form):
     year = forms.ChoiceField(choices=[(i,i) for i in range(2018, datetime.now().year + 2)])
     start_date = forms.DateField(widget=forms.SelectDateWidget)
     end_date = forms.DateField(widget=forms.SelectDateWidget)
-    start_time = forms.TimeField(widget=forms.TimeInput({"placeholder":"HH:MM"},format='%H:%M'))
-    end_time = forms.TimeField(widget=forms.TimeInput({"placeholder":"HH:MM"},format='%H:%M'))
+    start_time = forms.TimeField(label="Start Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"},format='%H:%M'))
+    end_time = forms.TimeField(label="Start Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"},format='%H:%M'))
 
 class editClassForm(forms.ModelForm):
     class Meta:
@@ -20,8 +20,8 @@ class editClassForm(forms.ModelForm):
 
     start_date = forms.DateField(widget=forms.SelectDateWidget)
     end_date = forms.DateField(widget=forms.SelectDateWidget)
-    start_time = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
-    end_time = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
+    start_time = forms.TimeField(label="Start Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"}, format='%H:%M'))
+    end_time = forms.TimeField(label="Start Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"}, format='%H:%M'))
 
 class copyClassForm(forms.Form):
     class_name = forms.CharField(max_length=50)
