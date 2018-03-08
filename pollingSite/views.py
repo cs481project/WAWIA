@@ -310,7 +310,6 @@ def report(request):
             curClass=form.cleaned_data['choose_class']
             students = Student.objects.filter(classroom=curClass)
             students = sorted(students, key=operator.attrgetter('lastname'))
-            print(curClass)
             for student1 in students:
                 students_length = len(students)
                 correctAnswer = []
@@ -320,23 +319,19 @@ def report(request):
                 totalnumbers2 = 0.0
                 answers = Answer.objects.filter(student=student1)
                 polls = Poll.objects.filter(classroom=curClass)
-                print(answers)
                 for poll in polls:
                     answerstopolls = []
                     if poll.startTime.date() >= start_t and poll.stopTime.date() <= end_t:
                         polllist.append(poll)
                         for answer in answers:
-                            print(start_t)
-                            print(answer.timestamp.date())
-                            print(end_t)
                             if answer.timestamp.date() >= start_t and answer.timestamp.date() <= end_t+ timedelta(days=1) and curClass == answer.poll.classroom:
                                 answerstopolls.append(answer)
                             if poll.startTime <= answer.timestamp and answer.timestamp <= poll.stopTime and answer.value == poll.correct and student1.name==answer.student.name and student1.lastname == answer.student.lastname:
                                 correctAnswer.append(answer)
                         if(len(answerstopolls)!=0):
-                            totalnumbers=((len(correctAnswer)/len(answerstopolls))*100)
+                            totalnumbers='%.2f'%((len(correctAnswer)/len(answerstopolls))*100)
                         if(len(polllist)!=0):
-                            totalnumbers2=((len(answerstopolls)/len(polllist))*100)
+                            totalnumbers2='%.2f'%((len(answerstopolls)/len(polllist))*100)
                 items += list(itertools.zip_longest([correctAnswer],[answerstopolls],[polllist],[student1],[totalnumbers],[totalnumbers2],fillvalue='-'))
             enumerated_items = enumerate(items)
         return render(request, 'pollingSite/report.html', locals())
