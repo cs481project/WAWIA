@@ -5,8 +5,8 @@
 <div class="row">
     <label style="text-align:center"><font size="6"><b>Whose Answer Was It Anyways?</b></font></label>
          {% include 'pollingSite/homebar.html' %}
-             <div class="row"><b>To Register Text: Register FirstName LastName StudentID (class key) to 509-303-4655</b></div>
-    <div class="row"><b>To Update Info Text: Update StudentID FirstName LastName</b></div>
+             <div class="row"><b>To Register Text: Register FirstName LastName (class key) to 509-303-4655</b></div>
+    <div class="row"><b>To Update Info Text: Update FirstName LastName</b></div>
     <div class="row"><b>To Answer a Poll: Simply text the letter of the answer</b></div>
         {% for class in classroom %}
         {% ifchanged class.quarter or class.year %}
