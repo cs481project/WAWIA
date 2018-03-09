@@ -5,8 +5,8 @@
 <label style="text-align:center"><font size="5" style="color:#990000"><b>Text: 509-303-4655</b></font></label>
 <div class="row">
     <div class="two columns"><label style="text-align:right; font-size:xx-large"><b>&nbsp;</b></label></div>
-    <div class="five columns"><label style="text-align:right; font-size:xx-large"><b>Total Submissions:</b></label></div>
-    <div class="two columns"><label style="text-align:right; font-size:xx-large"><b>{{totalSub}}</b></label></div>
+    <div class="five columns"><label style="text-align:right; font-size:xx-large"><b><text >Total Submissions:</b></label></div>
+    <div class="two columns" ><label id="text6"style="text-align:right; font-size:xx-large"><b>{{totalSub}}</b></label></div>
 </div>
 
 
@@ -15,49 +15,57 @@
         {% if poll.correct == 0 and poll.stopTime < poll.startTime %}
         <div class="row">
             <div class="four columns"><label><b>&nbsp;</b></label></div>
-            <div class="four columns"><button onclick="myFunction('answer')" style="background-color: #990000"> Show/Hide Answers </button></div>
+            <div class="four columns"><button onclick="myFunction('text8')" style="background-color: #990000"> Show/Hide Answers </button></div>
             <div class="four columns"><label><b>&nbsp;</b></label></div>
         </div>
-        <div class="two columns answer" style="display:none"><label style="text-align:right;font-size:x-large"><b>Option</b></label></div>
-        <div class="five columns answer" style="display:none"><label style="text-align:right;font-size:x-large"><b>Total Answers for Option</b></label></div>
+        
+        </div>
+<div class="text8" style="display:none">
+    <div class="text7">
+        <div class="row">
+            <div class="two columns answer"><label style="text-align:right;font-size:x-large"><b>Option</b></label></div>
+            <div class="five columns answer"><label style="text-align:right;font-size:x-large"><b>Total Answers for Option</b></label></div>
         </div>
         {% for option in options %}
-        <div id="answers" class="row">
+
+        <div id="" class="row">
             {% if forloop.counter == poll.correct %}
-            <div class="two columns answer" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
-            <div class="four columns answer" style="display:none"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
+            <div id="answer" class="two columns answer" style="display:block"><label style="text-align:right; color:green; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
+            <div class="four columns answer" style="display:block"><label id="text4" style="text-align:right; color:green; font-size:xx-large"><b>{{ option }}</b></label></div>
             {% else %}
-            <div class="two columns answer" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
-            <div class="four columns answer" style="display:none"><label style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
+            <div class="two columns answer" style="display:block"><label style="text-align:right; font-size:xx-large"><b>{{ forloop.counter|to_char }}.</b></label></div>
+            <div class="four columns answer" style="display:block"><label id="text5" style="text-align:right; font-size:xx-large"><b>{{ option }}</b></label></div>
             {% endif %}
         </div>
         {% endfor %}
-        <form method="post"style="border-color:white">
-            
-            <div class="row fin" id="Stop" style="display:block">
-                <div class="four columns"><label><b>&nbsp;</b></label></div>
-                <div class="four columns"><button type="submit" onclick="myFunction('fin');" style="background-color: #990000"> Close Poll </button></div>
-                <div class="four columns"><label><b>&nbsp;</b></label></div>
-            </div>
-            <div class="row fin" id="Close" style="display:none">
-                {% csrf_token %}
-                {{form.as_table}}
-                <div class="row">
-                    <div class="four columns"><label><b>&nbsp;</b></label></div>
-                    <div class="four columns"><a style="text-decoration:none; color:inherit"><button type="submit" style="background-color: #990000"> Show Responses </button></a></div>
-                    <div class="four columns"><label><b>&nbsp;</b></label></div>
-                </div>
-            </div>
-        </form>
-        {% elif poll.correct == 0 and poll.stopTime > poll.startTime %}
-<div class="row">
-    <div class="four columns"><label><b>&nbsp;</b></label></div>
-    <div class="four columns"><button onclick="myFunction('answer')" style="background-color: #990000"> Toggle Answers </button></div>
-    <div class="four columns"><label><b>&nbsp;</b></label></div>
-</div>
-<div class="two columns answer" style="display:none"><label style="text-align:right;font-size:x-large"><b>Option</b></label></div>
-<div class="five columns answer" style="display:none"><label style="text-align:right;font-size:x-large"><b>Total Answers for Option</b></label></div>
+    </div>
+    </div>
+    <form method="post" style="border-color:white">
+
+        <div class="row fin" id="Stop" style="display:block">
+            <div class="four columns"><label><b>&nbsp;</b></label></div>
+            <div class="four columns"><button type="submit" onclick="myFunction('fin');" style="background-color: #990000"> Close Poll </button></div>
+            <div class="four columns"><label><b>&nbsp;</b></label></div>
         </div>
+        <div class="row fin" id="Close" style="display:none">
+            {% csrf_token %}
+            {{form.as_table}}
+            <div class="row">
+                <div class="four columns"><label><b>&nbsp;</b></label></div>
+                <div class="four columns"><a style="text-decoration:none; color:inherit"><button type="submit" style="background-color: #990000"> Show Responses </button></a></div>
+                <div class="four columns"><label><b>&nbsp;</b></label></div>
+            </div>
+        </div>
+    </form>
+    {% elif poll.correct == 0 and poll.stopTime > poll.startTime %}
+    <div class="row">
+        <div class="four columns"><label><b>&nbsp;</b></label></div>
+        <div class="four columns"><button onclick="myFunction('answer')" style="background-color: #990000"> Toggle Answers </button></div>
+        <div class="four columns"><label><b>&nbsp;</b></label></div>
+    </div>
+    <div class="two columns answer" style="display:none"><label style="text-align:right;font-size:x-large"><b>Option</b></label></div>
+    <div class="five columns answer" style="display:none"><label style="text-align:right;font-size:x-large"><b>Total Answers for Option</b></label></div>
+</div>
         {% for option in options %}
 <div id="answers" class="row">
     {% if forloop.counter == poll.correct %}

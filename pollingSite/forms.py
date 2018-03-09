@@ -28,12 +28,7 @@ class createPollForm(forms.Form):
     possible_answers = forms.ChoiceField(choices=[(i,i) for i in range(2,13)], label="# of options for this poll")
 
 class correctAnswerForm(forms.Form):
-    correct_answer = forms.ChoiceField()
-    def __init__(self, *args, **kwargs):
-        super(correctAnswerForm, self).__init__()
-        if 'choices' in kwargs:
-            choices = kwargs.pop('choices')
-            self.fields['correct_answer'].choices=[(i,chr(64+i)) for i in range(1,choices+1)]
+    correct_answer = forms.CharField(max_length=1)
 
 class reportForm(forms.Form):
     choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))

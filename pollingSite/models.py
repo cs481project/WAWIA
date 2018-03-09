@@ -11,6 +11,7 @@ class InstructorUser(AbstractUser):
 
 class Student(models.Model):
     name = models.CharField(max_length = 128)
+    lastname = models.CharField(max_length = 128)
     phoneNumber = models.CharField(max_length = 20, null=True)
     def __str__(self):
         return self.name

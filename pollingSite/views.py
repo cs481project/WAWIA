@@ -34,21 +34,24 @@ def classroomSecureWrapper(function):
 def recieveSMS(request):
     if request.method == 'POST':
         #save inbound text into variable
-        #holdText = "Jane Doe 77777777 key999"#request.POST['Text']
+        holdText = request.POST['Text']
 
         # register format is "Reg First Last ID classKey"
         #holdText = "Register George Washington 1337 key999"
+        #holdText = "Register John Doe 84638212 KEY000"
+        #holdText = "register El M 85443344 KEY000"
+        #holdText = "Register Klye Dish 11122222 KEY01"
 
         # update format is "Up First Last ID"
-        #holdText = "Update Thomas Jefferson 548234327"
+        ##holdText = "Update Thomas Jefferson 548234327"
 
         # send an answer
-        holdText = "T"
+       # holdText = "T"
 
-        #studentNumber = 5093313630#4252319279
+        #studentNumber = 4252319279#1029384756
 
         #holdText = "2"
-        studentNumber = 1112223333#request.POST['src']#https://www.plivo.com/docs/api/message/
+        studentNumber = request.POST['From']
 
         #parse text into a list
         incoming_text = holdText.split(" ")
@@ -60,36 +63,71 @@ def recieveSMS(request):
             if(incoming_text[0].lower() == "update"):
                 #update
                 try:
-                    Student.objects.filter(phoneNumber=studentNumber).update(name=incoming_text[1], studentID=incoming_text[3])  # remember to add last name when change models
+                    stud = Student.objects.get(phoneNumber=studentNumber)
+                    stud.name=incoming_text[1]
+                    stud.last_name=incoming_text[2]
+                    stud.save()
                     print("student got updated")
+                    return HttpResponse("Message Recieved")
                 except:
                     print("An error occured when trying to update student")
                     traceback.print_exc()
 
         elif(len(incoming_text) == 5):
             if(incoming_text[0].lower() == "register"):  # Register takes 5 arguments
-                stdName = incoming_text[1] + incoming_text[2]
-                # create new student
-                print(Student.objects.filter(phoneNumber=studentNumber).exists())  # does the student exist?
+                # check if the student is already registered
+                # get the classroom connected to the class key the student entered
                 try:
-                    if(Student.objects.filter(phoneNumber=studentNumber).exists()):  # if the student exists, dont do anything
-                        print("An error occured. The student already exists")
-                        return render(request, 'pollingSite/test.html',locals())
-                    else:  # if the student doesnt exist, create the student
-                        studentCreate = Student.objects.create(name=stdName, studentID=incoming_text[3], phoneNumber=studentNumber)
-                        print(studentCreate)
-                        # get classroom with that class key
-                        Classroom.objects.get(classKey=incoming_text[4].upper()).students.add(studentCreate)
-                        print("Created a student")
-                except:
-                    print("An error occured when trying to add a student")
-                    traceback.print_exc()
-                    # now only need to add the student to the class
-                    #return render(request, 'pollingSite/test.html',locals
+                    #check if the class they want to register to exists. if so save it
+                    print(Classroom.objects.filter(classKey=incoming_text[4].upper()).count())
+                    if(Classroom.objects.filter(classKey=incoming_text[4].upper()).count() > 0):
+                        classWantToRegisterTo = Classroom.objects.get(classKey=incoming_text[4].upper())
+                        print(classWantToRegisterTo)
 
+                        # try to get the existing student from that class to later update it with new info
+                        if(Student.objects.filter(phoneNumber=studentNumber).count() > 0): #if student exists
+                            tempStudent = Student.objects.get(phoneNumber=studentNumber)
+                            print(tempStudent)
+                            # if class exists
+                            if(Classroom.objects.filter(students__phoneNumber__startswith=studentNumber).count() > 0):
+                                allStudentClasses = Classroom.objects.filter(students__phoneNumber__startswith=studentNumber)
+                                print(allStudentClasses)
+                                for item in allStudentClasses:
+                                    if(item == classWantToRegisterTo):
+                                        print("Student already in class")
+                                    else:
+                                        classWantToRegisterTo.students.add(tempStudent)
+                                        print("added student to class")
+                        #
+                        else:
+                            print("The student did not exist. Will now try to create student with info")
+                            try:
+                                # if the student doesnt exist, try creating a new student and adding it to the class
+                                studentCreate = Student.objects.create(name=incoming_text[1], lastname=incoming_text[2], studentID=incoming_text[3], phoneNumber=studentNumber)
+                                print(studentCreate)
+
+                                # save class the student wants to register to
+                                classWantToRegisterTo = Classroom.objects.get(classKey=incoming_text[4].upper())
+                                print(classWantToRegisterTo)
+
+                                # add student to that class
+                                classWantToRegisterTo.students.add(studentCreate)
+
+                                print("The student was added successfully")
+                            except:
+                                print("Error")
+                                print("Could not create a student with the entered data")
+                                traceback.print_exc()
+                    else:
+                        print("class does not exist. Will return message not recieved")
+                        return HttpResponse("Message Not Recieved")
+                except:
+                    print("An error occured. Will return message not recieved")
+                    traceback.print_exc()
+                    return HttpResponse("Message Not Recieved")
         elif(len(incoming_text) != 1):
             print("Not correct number of arguments needed. 1 argument needed")
-            return render(request, 'pollingSite/test.html',locals())
+            #return render(request, 'pollingSite/test.html',locals())
         else:  # so if argument is 1
             studentAnswerLetter = holdText#incoming_text[0]
             print(studentAnswerLetter)
@@ -166,11 +204,11 @@ def recieveSMS(request):
 
             for item in studentClassroom:
                 start = datetime.now()
-                start = start.replace(hour=(item.StartTime.hour), minute=(item.StartTime.minute))
+                start = start.replace(hour=(item.start_time.hour), minute=(item.start_time.minute))
 
                 end = datetime.now()
-                hour = item.EndTime.hour
-                minutez = item.EndTime.minute
+                hour = item.end_time.hour
+                minutez = item.end_time.minute
                 end = end.replace(hour=hour, minute=minutez)
 
                 if(currentTime > start and currentTime < end):
@@ -193,8 +231,6 @@ def recieveSMS(request):
                 else:
                     print("No class currently")
 
-            #create new object and update fields
-            #newStudent = Answer.objects.create(poll=Poll.objects.get(key=incoming_text[0]), value=incoming_text[1], timestamp=now(), student=Student.objects.get(name='FakeNews'))
             #return HttpResponse("Message Received")
     return render(request, 'pollingSite/test.html',locals())
 
@@ -240,10 +276,10 @@ def report(request):
                 answers = Answer.objects.filter(student=student1)
                 polls = Poll.objects.filter(classroom=curClass)
                 print(answers)
-                for poll in polls: 
-                    answerstopolls = [] 
+                for poll in polls:
+                    answerstopolls = []
                     if poll.startTime.date() >= start_t and poll.stopTime.date() <= end_t:
-                        polllist.append(poll) 
+                        polllist.append(poll)
                         for answer in answers:
                             print(start_t)
                             print(answer.timestamp.date())
@@ -344,9 +380,10 @@ def activePoll(request, poll, classroom):
         options.append(next)
         totalSub += next
     if request.method == 'POST':
-        form = correctAnswerForm(request.POST, choices=poll.options)
+        form = correctAnswerForm(request.POST)
         if form.is_valid():
-            poll.correct = form.cleaned_data['correct_answer']
+            charval = form.cleaned_data['correct_answer']
+            poll.correct = ord(charval.upper()) - 64
             poll.save(update_fields=['correct'])
             return render(request, 'pollingSite/activePoll.html', locals())
         else:
@@ -355,12 +392,12 @@ def activePoll(request, poll, classroom):
             poll.save()
             return render(request, 'pollingSite/activePoll.html', locals())
     else:
-        form = correctAnswerForm(choices=poll.options)
+        form = correctAnswerForm()
         otherPolls = Poll.objects.filter(classroom=Classroom.objects.get(id=classroom))
         for poll in otherPolls:
             poll.isPollActive = False
-            poll.save(update_fields=['isPollActive']) 
+            poll.save(update_fields=['isPollActive'])
 
         poll.isPollActive=True
-        poll.save(update_fields=['isPollActive'])     
+        poll.save(update_fields=['isPollActive'])
         return render(request, 'pollingSite/activePoll.html', locals())

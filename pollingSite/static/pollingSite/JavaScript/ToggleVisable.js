@@ -30,3 +30,12 @@ function hideNonVisibleDivs() {
         }
     }
 }
+$(document).ready(function () {
+    var refresh = function () {
+        $('.text7').load(location.href + ' .text7');
+        $('#text6').load(location.href + ' #text6');
+
+    }
+    setInterval(refresh, 1000);
+    refresh();
+});
