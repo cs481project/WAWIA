@@ -246,56 +246,11 @@ def index(request):
     return render(request, 'pollingSite/index.html', locals())
 
 @login_required
-def pollAdmin(request):
-    return addSearchClass(request)
-
-@login_required
 def setActive(request, classroom):
     classroom = Classroom.objects.get(pk=classroom)
     request.user.activeClass = classroom
     request.user.save()
     return redirect('pollingSite:index')
-
-@login_required
-def addSearchClass(request):
-    classroom = Classroom.objects.filter(instructor=request.user).order_by("-year", "-quarter")
-    return render(request, 'pollingSite/addSearchClass.html', locals())
-
-@login_required
-def copyClass(request, classroom):
-    classroom = Classroom.objects.get(pk=classroom)
-    if request.method == 'POST':
-        form = copyClassForm(request.POST)
-        if form.is_valid():
-            classroom.duplicate(request.user, form.cleaned_data['class_name'], form.cleaned_data['quarter'], form.cleaned_data['year'])
-            return redirect('pollingSite:pollAdmin')
-    else:
-        form = copyClassForm(initial={'class_name':classroom.className, 'quarter':classroom.quarter, 'year':classroom.year})
-        return render(request, 'pollingSite/copyClass.html', locals())
-
-@login_required
-def settings(request):
-    message = None
-    email = request.user.email
-    first_name = request.user.first_name
-    last_name = request.user.last_name
-    if request.method == 'POST':
-        form = settingForm(request.POST)
-        if form.is_valid():
-            user = User.objects.get(username=request.user.get_username())
-            user.email = form.cleaned_data['email']
-            user.first_name = form.cleaned_data['first_name']
-            user.last_name = form.cleaned_data['last_name']
-            user.save()
-            message = "Changed Personal Settings"
-            return render(request, 'pollingSite/setting.html', locals())
-    else:
-        form = settingForm(initial={'email':email, 'first_name':first_name, 'last_name':last_name})
-        return render(request, 'pollingSite/setting.html', locals())
-
-@login_required
-def search(request):
-    return render(request, 'pollingSite/search.html', locals())
 
 @login_required
 def report(request):
@@ -382,17 +337,11 @@ def edit(request, classroom):
             editClass.end_date = form.cleaned_data['end_date']
             editClass.start_time = form.cleaned_data['start_time']
             editClass.end_time = form.cleaned_data['end_time']
+            editClass.save()
             return redirect('pollingSite:index')
     else:
         form = editClassForm(instance=thisClass)
         return render(request, 'pollingSite/editClass.html', locals())
-
-@login_required
-@classroomSecureWrapper
-def classroom(request, classroom):
-    polls = Poll.objects.filter(classroom=classroom)
-    curClass = classroom
-    return render(request, 'pollingSite/pollList.html', locals())
 
 @login_required
 def pollLanding(request):
@@ -400,19 +349,6 @@ def pollLanding(request):
         return redirect('pollingSite:addClass')
     else:
         return redirect('pollingSite:createPoll', request.user.activeClass.id)
-
-@login_required
-@classroomSecureWrapper
-def info(request, classroom):
-    classroom = Classroom.objects.get(id=classroom)
-    return render(request, 'pollingSite/info.html', locals())
-
-@login_required
-@classroomSecureWrapper
-def pollList(request, classroom):
-    polls = Poll.objects.filter(classroom=classroom)
-    curClass = Classroom.objects.get(id=classroom)
-    return render(request, 'pollingSite/pollList.html', locals())
 
 @login_required
 @classroomSecureWrapper

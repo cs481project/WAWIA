@@ -12,15 +12,13 @@ class InstructorUser(AbstractUser):
 class Student(models.Model):
     name = models.CharField(max_length = 128)
     lastname = models.CharField(max_length = 128)
-    studentID = models.IntegerField(unique=True)
     phoneNumber = models.CharField(max_length = 20, null=True)
     def __str__(self):
         return self.name
 
 
 class Classroom(models.Model):
-    classNumber = models.CharField(max_length = 20, default="")
-    className = models.CharField(max_length = 64, default=classNumber)
+    className = models.CharField(max_length = 64)
     classKey = models.CharField(max_length = 6, unique=True)
 
     students = models.ManyToManyField(Student)
@@ -43,22 +41,6 @@ class Classroom(models.Model):
         if(self.classKey == ''):
             chars = ascii_uppercase + digits
             self.classKey = ''.join(choices(chars, k=5))
-
-    def duplicate(self, user, name, quarter, year):
-        dupe = Classroom.objects.create(instructor = user,
-                                        className=name,
-                                        classNumber=self.classNumber,
-                                        quarter=quarter,
-                                        year=year)
-        dupe.save()
-        for poll in Poll.objects.filter(classroom=self):
-            newPoll = Poll.objects.create(
-                                name=poll.name,
-                                options=poll.options,
-                                correct=poll.correct,
-                                classroom=dupe,
-                                )
-            newPoll.save()
 
     def isActive(self):
         if datetime.now().date() > self.end_date or datetime.now().date() < self.start_date:
