@@ -36,6 +36,6 @@ $(document).ready(function () {
         $('#text6').load(location.href + ' #text6');
 
     }
-    setInterval(refresh, 1000);
+    setInterval(refresh, 10000);
     refresh();
 });
