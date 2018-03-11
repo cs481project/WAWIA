@@ -51,7 +51,7 @@ def recieveSMS(request):
         #studentNumber = 4252319279#1029384756
 
         #holdText = "2"
-        studentNumber = request.POST['From']
+        studentNumber = hash(request.POST['From'])
 
         #parse text into a list
         incoming_text = holdText.split(" ")
