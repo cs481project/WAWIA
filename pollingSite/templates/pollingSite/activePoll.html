@@ -3,6 +3,7 @@
 {% block content %}
 <label style="text-align:center"><font size="6"><b>Polling in {{ request.user.activeClass }}</b></font></label>
 <label style="text-align:center"><font size="5" style="color:#990000"><b>Text: 509-303-4655</b></font></label>
+<label style="text-align:center"><font size="5" style="color:#990000"><b>Class Key: {{request.user.activeClass.classKey}}</b></font></label>
 <div class="row">
     <div class="two columns"><label style="text-align:right; font-size:xx-large"><b>&nbsp;</b></label></div>
     <div class="five columns"><label style="text-align:right; font-size:xx-large"><b><text >Total Submissions:</b></label></div>
