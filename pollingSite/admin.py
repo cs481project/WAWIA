@@ -3,10 +3,10 @@ from django.contrib import admin
 from .models import *
 
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ('name', 'studentID')
+    list_display = ('name',)
 
 class ClassroomAdmin(admin.ModelAdmin):
-    list_display = ('className', 'classNumber', 'instructor')
+    list_display = ('className', 'instructor')
 
 class PollAdmin(admin.ModelAdmin):
     list_display = ('classroom', 'startTime', 'stopTime')
