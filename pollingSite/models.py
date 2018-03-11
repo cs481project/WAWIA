@@ -36,6 +36,7 @@ class Classroom(models.Model):
 
     def __str__(self):
         return self.className
+
     def __init__(self, *args, **kwargs):
         super(Classroom, self).__init__(*args, **kwargs)
         if(self.classKey == ''):
