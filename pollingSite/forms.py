@@ -11,7 +11,7 @@ class createClassForm(forms.Form):
     start_date = forms.DateField(widget=forms.SelectDateWidget)
     end_date = forms.DateField(widget=forms.SelectDateWidget)
     start_time = forms.TimeField(label="Start Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"},format='%H:%M'))
-    end_time = forms.TimeField(label="Start Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"},format='%H:%M'))
+    end_time = forms.TimeField(label="End Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"},format='%H:%M'))
 
 class editClassForm(forms.ModelForm):
     class Meta:
@@ -21,7 +21,7 @@ class editClassForm(forms.ModelForm):
     start_date = forms.DateField(widget=forms.SelectDateWidget)
     end_date = forms.DateField(widget=forms.SelectDateWidget)
     start_time = forms.TimeField(label="Start Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"}, format='%H:%M'))
-    end_time = forms.TimeField(label="Start Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"}, format='%H:%M'))
+    end_time = forms.TimeField(label="End Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"}, format='%H:%M'))
 
 class createPollForm(forms.Form):
     choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
