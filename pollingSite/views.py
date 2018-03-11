@@ -58,7 +58,7 @@ def recieveSMS(request):
 
         print(len(incoming_text))
 
-        if(len(incoming_text) == 3):  # Update takes 4 arguments
+        if(len(incoming_text) == 3):  # Update takes 3 arguments
             #check if first element is "Update". if it is not, then return
             if(incoming_text[0].lower() == "update"):
                 #update
@@ -75,14 +75,14 @@ def recieveSMS(request):
                     #traceback.print_exc()
 
         elif(len(incoming_text) == 4):
-            if(incoming_text[0].lower() == "register"):  # Register takes 5 arguments
+            if(incoming_text[0].lower() == "register"):  # Register takes 4 arguments
                 # check if the student is already registered
                 # get the classroom connected to the class key the student entered
                 try:
                     #check if the class they want to register to exists. if so save it
                     #print(Classroom.objects.filter(classKey=incoming_text[4].upper()).count())
-                    if(Classroom.objects.filter(classKey=incoming_text[4].upper()).count() > 0):
-                        classWantToRegisterTo = Classroom.objects.get(classKey=incoming_text[4].upper())
+                    if(Classroom.objects.filter(classKey=incoming_text[3].upper()).count() > 0):
+                        classWantToRegisterTo = Classroom.objects.get(classKey=incoming_text[3].upper())
                         #print(classWantToRegisterTo)
                         # try to get the existing student from that class to later update it with new info
                         if(Student.objects.filter(phoneNumber=studentNumber).count() > 0): #if student exists
@@ -99,6 +99,7 @@ def recieveSMS(request):
                                     else:
                                         classWantToRegisterTo.students.add(tempStudent)
                                         classWantToRegisterTo.save()
+                                        return HttpResponse("Message Recieved")
                                         #print("added student to class")
                         else:
                             #print("The student did not exist. Will now try to create student with info")
@@ -112,6 +113,7 @@ def recieveSMS(request):
                                 # add student to that class
                                 classWantToRegisterTo.students.add(studentCreate)
                                 classWantToRegisterTo.save()
+                                return HttpResponse("Message Recieved")
                                 #print("The student was added successfully")
                             except:
                                 return HttpResponse("Message Not Recieved")
