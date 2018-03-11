@@ -2,7 +2,7 @@ from django import forms
 from datetime import datetime
 from .models import SEASONS, Classroom
 from django.contrib.auth.models import User
-from django.db.models import Count
+from django.db.models import Count, Q
 
 class createClassForm(forms.Form):
     class_name = forms.CharField(max_length=50)
@@ -24,13 +24,23 @@ class editClassForm(forms.ModelForm):
     end_time = forms.TimeField(label="Start Time (24hr)", widget=forms.TimeInput({"placeholder":"HH:MM"}, format='%H:%M'))
 
 class createPollForm(forms.Form):
-    choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(createPollForm, self).__init__(*args, **kwargs)
+        self.fields['choose_class'] = forms.ModelChoiceField(queryset=Classroom.objects.filter(instructor=user))
+
+    choose_class = forms.ModelChoiceField(queryset=Classroom.objects.none())
     possible_answers = forms.ChoiceField(choices=[(i,i) for i in range(2,13)], label="# of options for this poll")
 
 class correctAnswerForm(forms.Form):
     correct_answer = forms.CharField(max_length=1)
 
 class reportForm(forms.Form):
-    choose_class = forms.ModelChoiceField(queryset=Classroom.objects.annotate(class_count=Count('className')))
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(reportForm, self).__init__(*args, **kwargs)
+        self.fields['choose_class'] = forms.ModelChoiceField(queryset=Classroom.objects.filter(instructor=user))
+
+    choose_class = forms.ModelChoiceField(queryset=Classroom.objects.none())
     start_date = forms.DateField(widget=forms.SelectDateWidget)
     end_date = forms.DateField(widget=forms.SelectDateWidget)

@@ -282,7 +282,7 @@ def report(request):
     w = 7
     items = []
     if request.method == 'POST':
-        form = reportForm(request.POST)
+        form = reportForm(request.POST, user=request.user)
         if form.is_valid():
             start_t = form.cleaned_data['start_date']
             end_t = form.cleaned_data['end_date']
@@ -315,7 +315,7 @@ def report(request):
             enumerated_items = enumerate(items)
         return render(request, 'pollingSite/report.html', locals())
     else:
-        form = reportForm(initial={'choose_class': request.user.activeClass})
+        form = reportForm(initial={'choose_class': request.user.activeClass},user=request.user)
         return render(request, 'pollingSite/report.html', locals())
 
 @login_required
@@ -374,7 +374,7 @@ def pollLanding(request):
 def createPoll(request, classroom):
     curClass1 = classroom
     if request.method == 'POST':
-        form = createPollForm(request.POST)
+        form = createPollForm(request.POST, user=request.user)
         if form.is_valid():
             newPoll = Poll.objects.create(classroom = Classroom.objects.get(pk=classroom), name="", options=form.cleaned_data['possible_answers'], startTime = datetime.now(), stopTime = datetime.now())
             newPoll.startTime = timezone.now()
@@ -385,7 +385,7 @@ def createPoll(request, classroom):
         return redirect('pollingSite:addClass')
     else:
         classroom = Classroom.objects.get(pk=classroom)
-        form = createPollForm(initial={'choose_class': request.user.activeClass})
+        form = createPollForm(initial={'choose_class': request.user.activeClass}, user=request.user)
         return render(request, 'pollingSite/createPoll.html', locals())
 
 @login_required
