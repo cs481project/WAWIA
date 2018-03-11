@@ -108,7 +108,7 @@ def recieveSMS(request):
                                 studentCreate = Student.objects.create(name=incoming_text[1], lastname=incoming_text[2], phoneNumber=studentNumber)
                                 #print("student: {}".format(studentCreate))
                                 # save class the student wants to register to
-                                classWantToRegisterTo = Classroom.objects.get(classKey=incoming_text[4].upper())
+                                classWantToRegisterTo = Classroom.objects.get(classKey=incoming_text[3].upper())
                                 #print("class want to register to: {}".format(classWantToRegisterTo))
                                 # add student to that class
                                 classWantToRegisterTo.students.add(studentCreate)
