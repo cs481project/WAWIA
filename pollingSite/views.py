@@ -1,6 +1,7 @@
 import uuid
 import itertools
 import operator
+import hashlib
 
 from datetime import datetime, timedelta,date
 from django import template
@@ -35,23 +36,10 @@ def recieveSMS(request):
     if request.method == 'POST':
         #save inbound text into variable
         holdText = request.POST['Text']
-
-        # register format is "Reg First Last ID classKey"
-        #holdText = "Register George Washington 1337 key000"
-        #holdText = "Register John Doe 84638212 KEY000"
-        #holdText = "register El M 85443344 KEY999"
-        #holdText = "Register Klye Dish 11122222 KEY000"
-
-        # update format is "Up First Last ID"
-        #holdText = "Update Thomas Jefferson 548234327"
-
-        # send an answer
-        #holdText = "E"
-
-        #studentNumber = 4252319279#1029384756
+        
 
         #holdText = "2"
-        studentNumber = hash(request.POST['From'])
+        studentNumber = hashlib.sha224(request.POST['From'].encode('utf-8')).hexdigest()
 
         #parse text into a list
         incoming_text = holdText.split(" ")
@@ -87,11 +75,11 @@ def recieveSMS(request):
                         # try to get the existing student from that class to later update it with new info
                         if(Student.objects.filter(phoneNumber=studentNumber).count() > 0): #if student exists
                             tempStudent = Student.objects.get(phoneNumber=studentNumber)
-                            print(tempStudent)
+                            #print(tempStudent)
                             # if class exists
                             if(Classroom.objects.filter(students__phoneNumber__startswith=studentNumber).count() > 0):
                                 allStudentClasses = Classroom.objects.filter(students__phoneNumber__startswith=studentNumber)
-                                print(allStudentClasses)
+                                #print(allStudentClasses)
                                 for item in allStudentClasses:
                                     if(item == classWantToRegisterTo):
                                         #print("Student already in class")
@@ -258,7 +246,7 @@ def recieveSMS(request):
                 #print("No class currently")
                 return HttpResponse("Message Not Recieved")
     #return HttpResponse("Message Not Received")
-    return render(request, 'pollingSite/test.html',locals())
+    #return render(request, 'pollingSite/test.html',locals())
 
 def landing(request):
     if request.user.is_authenticated:
@@ -407,7 +395,7 @@ def activePoll(request, poll, classroom):
             poll.correct = ord(charval.upper()) - 64
             poll.save(update_fields=['correct'])
             poll.stopTime = timezone.now()
-            poll.save(update_fields=['stopTime'])            
+            poll.save(update_fields=['stopTime'])
             poll.isPollActive=False;
             poll.save()
             return render(request, 'pollingSite/activePoll.html', locals())
