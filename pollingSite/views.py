@@ -401,13 +401,14 @@ def activePoll(request, poll, classroom):
             return render(request, 'pollingSite/activePoll.html', locals())
         else:
             poll.isPollActive=False
+            poll.save(update_fields=['isPollActive'])
     else:
         form = correctAnswerForm()
         otherPolls = Poll.objects.filter(classroom=Classroom.objects.get(id=classroom))
         for poll in otherPolls:
             poll.isPollActive = False
             poll.save(update_fields=['isPollActive'])
-
-    poll.isPollActive=True
-    poll.save(update_fields=['isPollActive'])
+        poll.isPollActive=True
+        poll.save(update_fields=['isPollActive'])
+        
     return render(request, 'pollingSite/activePoll.html', locals())
