@@ -366,7 +366,7 @@ def createPoll(request, classroom):
     if request.method == 'POST':
         form = createPollForm(request.POST, user=request.user)
         if form.is_valid():
-            newPoll = Poll.objects.create(classroom = Classroom.objects.get(pk=classroom), name="", options=form.cleaned_data['possible_answers'], startTime = datetime.now(), stopTime = datetime.now())
+            newPoll = Poll.objects.create(classroom = Classroom.objects.get(pk=classroom), options=form.cleaned_data['possible_answers'], startTime = datetime.now(), stopTime = datetime.now())
             newPoll.startTime = timezone.now()
             newPoll.save()
 
@@ -384,31 +384,36 @@ def activePoll(request, poll, classroom):
     poll = Poll.objects.get(id=poll)
     options = []
     totalSub = 0
+    poll.save(update_fields=['isPollActive'])
     for option in range(1, poll.options+1):
         next = Answer.objects.filter(poll=poll, value=option).count()
         options.append(next)
         totalSub += next
     if request.method == 'POST':
         form = correctAnswerForm(request.POST)
+        poll.isPollActive=False
+        poll.save(update_fields=['isPollActive'])
         if form.is_valid():
             charval = form.cleaned_data['correct_answer']
             poll.correct = ord(charval.upper()) - 64
             poll.save(update_fields=['correct'])
             poll.stopTime = timezone.now()
             poll.save(update_fields=['stopTime'])
-            poll.isPollActive=False
-            poll.save()
+            poll.submit = True
+            poll.save(update_fields=['submit'])
             return render(request, 'pollingSite/activePoll.html', locals())
-        else:
-            poll.isPollActive=False
-            poll.save(update_fields=['isPollActive'])
     else:
         form = correctAnswerForm()
         otherPolls = Poll.objects.filter(classroom=Classroom.objects.get(id=classroom))
-        for poll in otherPolls:
-            poll.isPollActive = False
+        for Opoll in otherPolls:
+            Opoll.isPollActive = False
+            Opoll.save(update_fields=['isPollActive'])
+        print("Hello World")
+        if(poll.submit==False):
+            poll.isPollActive=True
             poll.save(update_fields=['isPollActive'])
-        poll.isPollActive=True
-        poll.save(update_fields=['isPollActive'])
+        else:
+            poll.isActive=False
+            poll.save(update_fields=['isPollActive'])
         
     return render(request, 'pollingSite/activePoll.html', locals())
