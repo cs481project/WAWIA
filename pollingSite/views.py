@@ -396,9 +396,11 @@ def activePoll(request, poll, classroom):
             poll.save(update_fields=['correct'])
             poll.stopTime = timezone.now()
             poll.save(update_fields=['stopTime'])
-            poll.isPollActive=False;
+            poll.isPollActive=False
             poll.save()
             return render(request, 'pollingSite/activePoll.html', locals())
+        else:
+            poll.isPollActive=False
     else:
         form = correctAnswerForm()
         otherPolls = Poll.objects.filter(classroom=Classroom.objects.get(id=classroom))
@@ -406,6 +408,6 @@ def activePoll(request, poll, classroom):
             poll.isPollActive = False
             poll.save(update_fields=['isPollActive'])
 
-        poll.isPollActive=True
-        poll.save(update_fields=['isPollActive'])
-        return render(request, 'pollingSite/activePoll.html', locals())
+    poll.isPollActive=True
+    poll.save(update_fields=['isPollActive'])
+    return render(request, 'pollingSite/activePoll.html', locals())
