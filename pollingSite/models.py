@@ -50,16 +50,13 @@ class Classroom(models.Model):
             return True
 
 class Poll(models.Model):
-    name = models.CharField(max_length = 64)
     options = models.IntegerField()
     correct = models.IntegerField(default=0)
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, null=True)
     startTime = models.DateTimeField(editable=True,blank=True, null=True)
     stopTime = models.DateTimeField(editable=True,blank=True, null=True)
     isPollActive = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
+    submit = models.BooleanField(default=False)
 
 class Answer(models.Model):
     poll = models.ForeignKey(Poll, on_delete=models.CASCADE)
