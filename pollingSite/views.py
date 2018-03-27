@@ -43,9 +43,6 @@ def recieveSMS(request):
 
         #parse text into a list
         incoming_text = holdText.split(" ")
-
-        print(len(incoming_text))
-
         if(len(incoming_text) == 3):  # Update takes 3 arguments
             #check if first element is "Update". if it is not, then return
             if(incoming_text[0].lower() == "update"):
@@ -408,7 +405,6 @@ def activePoll(request, poll, classroom):
         for Opoll in otherPolls:
             Opoll.isPollActive = False
             Opoll.save(update_fields=['isPollActive'])
-        print("Hello World")
         if(poll.submit==False):
             poll.isPollActive=True
             poll.save(update_fields=['isPollActive'])

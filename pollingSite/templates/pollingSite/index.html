@@ -36,9 +36,9 @@
                 {% endif %}
                 {% if class.isActive %}
                 {% if request.user.activeClass == class %}
-                <div class="three columns"><a href="{% url 'pollingSite:setActive' class.id %}"><input type="radio" checked style="margin-left:50%"></input></a></div>
+                <div class="three columns"><a href="{% url 'pollingSite:setActive' class.id %}"><input type="radio" name="select" checked style="margin-left:50%"></input></a></div>
                 {% else %}
-                <div class="three columns"><a href="{% url 'pollingSite:setActive' class.id %}"><input type="radio" style="margin-left:50%"></input></a></div>
+                <div class="three columns"><a href="{% url 'pollingSite:setActive' class.id %}"><input type="radio" name="select" style="margin-left:50%"></input></a></div>
                 {% endif %}
                 {% else %}
                 <div class="three columns">&nbsp;</div>
